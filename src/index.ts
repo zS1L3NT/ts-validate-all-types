@@ -17,9 +17,10 @@ const Check = (obj: any, pattern: ITpattern): [boolean, string[]] => {
 	return [pattern(obj)(reporter), reporter.reports]
 }
 
-const ValidateRequest = (req: any, res: any, next: Function) => (
-	item: "body" | "params",
-	pattern: ITpattern
+const ValidateRequest = (item: "body" | "params", pattern: ITpattern) => (
+	req: any,
+	res: any,
+	next: Function
 ) => {
 	const obj = req[item]
 	const [success, errors] = Check(obj, pattern)
