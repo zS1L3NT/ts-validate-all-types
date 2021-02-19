@@ -41,7 +41,8 @@ export default function Tobject(pattern?: {
 			const patt = pattern[key]
 
 			if (!patt) {
-				reporter.setStack(key)
+				reporter
+					.setStack(key)
 					.complain(`No type definitions for (${key})`)
 				return false
 			}

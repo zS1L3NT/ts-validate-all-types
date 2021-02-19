@@ -17,10 +17,14 @@ export default function Tnumber(...pattern: number[]): ITnumber {
 			const type_ = typeof item === "number"
 			const indexOf_ = pattern.indexOf(item) >= 0
 			if (!type_)
-				reporter.complain(`Expected (${reporter.getStack()}) to be of type \`number\``)
+				reporter.complain(
+					`Expected (${reporter.getStack()}) to be of type \`number\``
+				)
 			if (!indexOf_)
 				reporter.complain(
-					`Expected (${reporter.getStack()}) to be in (${JSON.stringify(pattern)})`
+					`Expected (${reporter.getStack()}) to be in (${JSON.stringify(
+						pattern
+					)})`
 				)
 			return type_ && indexOf_
 		}
@@ -31,7 +35,9 @@ export default function Tnumber(...pattern: number[]): ITnumber {
 	return item => reporter => {
 		const type_ = typeof item === "number"
 		if (!type_)
-			reporter.complain(`Expected (${reporter.getStack()}) to be of type \`number\``)
+			reporter.complain(
+				`Expected (${reporter.getStack()}) to be of type \`number\``
+			)
 		return type_
 	}
 }

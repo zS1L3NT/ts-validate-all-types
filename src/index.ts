@@ -10,16 +10,44 @@ import Tundefined, { ITundefined } from "./Tundefined"
 /**
  * Function to check the type of an expression
  * @return [1]: Boolean of whether the object matches the Pattern
- * @return [2]: Error messages if any 
+ * @return [2]: Error messages if any
  */
-export default (obj: any, pattern: ITpattern): [boolean, string[]] => {
+const Check = (obj: any, pattern: ITpattern): [boolean, string[]] => {
 	const reporter = new Reporter(false, ["*"], [])
 	return [pattern(obj)(reporter), reporter.reports]
+}
+
+const ValidateRequest = (req: any, res: any, next: Function) => (
+	item: "body" | "params",
+	pattern: ITpattern
+) => {
+	const obj = req[item]
+	const [success, errors] = Check(obj, pattern)
+	if (success) next()
+	else res.status(400).send(errors)
 }
 
 /**
  * & Type for a pattern
  */
-type ITpattern = ITstring | ITnumber | ITboolean | ITlist | ITobject | ITundefined | ITnull
+type ITpattern =
+	| ITstring
+	| ITnumber
+	| ITboolean
+	| ITlist
+	| ITobject
+	| ITundefined
+	| ITnull
 
-export { Tstring, Tnumber, Tboolean, Tlist, Tobject, Tnull, Tundefined, ITpattern }
+export {
+	ValidateRequest,
+	Tstring,
+	Tnumber,
+	Tboolean,
+	Tlist,
+	Tobject,
+	Tnull,
+	Tundefined,
+	ITpattern
+}
+export default Check

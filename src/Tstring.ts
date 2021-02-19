@@ -29,10 +29,14 @@ export default function Tstring(...pattern: any[]): ITstring {
 				? item.match(pattern[0])!.length > 0
 				: false
 			if (!type_)
-				reporter.complain(`Expected (${reporter.getStack()}) to be of type \`string\``)
+				reporter.complain(
+					`Expected (${reporter.getStack()}) to be of type \`string\``
+				)
 			if (!regex_)
 				reporter.complain(
-					`Expected (${reporter.getStack()}) to match RegExp (${pattern[0]})`
+					`Expected (${reporter.getStack()}) to match RegExp (${
+						pattern[0]
+					})`
 				)
 			return type_ && regex_
 		}
@@ -45,10 +49,14 @@ export default function Tstring(...pattern: any[]): ITstring {
 			const type_ = typeof item === "string"
 			const indexOf_ = pattern.indexOf(item) >= 0
 			if (!type_)
-				reporter.complain(`Expected (${reporter.getStack()}) to be of type \`string\``)
+				reporter.complain(
+					`Expected (${reporter.getStack()}) to be of type \`string\``
+				)
 			if (!indexOf_)
 				reporter.complain(
-					`Expected (${reporter.getStack()}) to be in (${JSON.stringify(pattern)})`
+					`Expected (${reporter.getStack()}) to be in (${JSON.stringify(
+						pattern
+					)})`
 				)
 			return type_ && indexOf_
 		}
@@ -59,7 +67,9 @@ export default function Tstring(...pattern: any[]): ITstring {
 	return item => reporter => {
 		const type_ = typeof item === "string"
 		if (!type_)
-			reporter.complain(`Expected (${reporter.getStack()}) to be of type \`string\``)
+			reporter.complain(
+				`Expected (${reporter.getStack()}) to be of type \`string\``
+			)
 		return type_
 	}
 }
