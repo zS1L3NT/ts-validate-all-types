@@ -15,26 +15,42 @@ import Tundefined, { ITundefined } from "./Tundefined"
  * @return [1]: Boolean of whether the object matches the Pattern
  * @return [2]: Error messages if any
  */
-const Check = (obj: any, pattern: ITpattern, name?: string): [boolean, string[]] => {
+const Check = (
+	obj: any,
+	pattern: ITpattern,
+	name?: string
+): [boolean, string[]] => {
 	const reporter = new Reporter(false, [name || "*"], [])
 	return [pattern(obj)(reporter), reporter.reports]
 }
 
-const ValidateRequest = (item: "body" | "params", pattern: ITpattern, password?: string) => (
-	req: any,
-	res: any,
-	next: Function
-) => {
+const ValidateRequest = (
+	item: "body" | "params",
+	pattern: ITpattern,
+	password?: string
+) => (req: any, res: any, next: Function) => {
 	const DEV = !!password && password === "developer"
 	const obj = req[item]
-	
+
 	if (DEV) console.log("obj: ", obj)
-	
+
 	const [success, errors] = Check(obj, pattern, item)
-	
+
 	if (DEV) console.log("success: ", success)
 	if (DEV) console.log("errors: ", errors)
-	
+
+	if (success !== errors.length > 0) {
+		res.status(500).send({
+			message:
+				"Error with typechecking. Create an issue on https://github.com/zS1L3NT/validate-all-types with your PATTERN and the `data` object in this error",
+			data: {
+				obj,
+				errors
+			}
+		})
+		return
+	}
+
 	if (success) next()
 	else res.status(400).send(errors)
 }
