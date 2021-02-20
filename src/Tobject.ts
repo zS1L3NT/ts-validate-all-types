@@ -25,16 +25,20 @@ export default function Tobject(pattern?: {
 		const patternKeys = Object.keys(pattern)
 		const keys = Object.keys(item)
 
+		let hasError = false
 		for (let i = 0, il = patternKeys.length; i < il; i++) {
 			const patternKey = patternKeys[i]
 			const indexOf_ = keys.indexOf(patternKey) >= 0
-			if (!indexOf_)
+			if (!indexOf_) {
 				reporter.complain(
 					`Expected (${reporter.getStack()}) to contain property (${patternKey})`
 				)
+				hasError = true
+			}
 		}
+		if (hasError) return false
 
-		const types: boolean[] = []
+		hasError = false
 		for (let i = 0, il = keys.length; i < il; i++) {
 			const key = keys[i]
 			const value = item[key]
@@ -44,13 +48,14 @@ export default function Tobject(pattern?: {
 				reporter
 					.setStack(key)
 					.complain(`No type definitions for (${key})`)
-				return false
+				hasError = true
+				continue
 			}
 
-			const type__ = patt(value)(reporter.setStack(key))
-			types.push(type__)
+			const type_ = patt(value)(reporter.setStack(key))
+			if (!type_) hasError = true
 		}
 
-		return types.every(i => i)
+		return !hasError
 	}
 }
