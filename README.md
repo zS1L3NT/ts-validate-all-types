@@ -6,7 +6,7 @@
 ## What is `validate-all-types`?
 This package is a type validator mainly for Typescript (also works with Javascript). Ever faced those issues where you're trying to make sure a type `any` is an instance of an interface? This is the issue this package was designed to solve. With this package, you can safely assert the type for an object and return customised errors if the types are incorrect
 
-## Installation
+## Installation & Usage
 > $ npm install validate-all-types
 
 or
@@ -29,10 +29,11 @@ The `Check` object we imported earlier is a function which can take 2 (3: option
 
 ### Check's parameters:
 Number | Type      | Description
--------|-----------|-------------------
+-------|-----------|------------------------------------------------------
 1      | any       | The object we are checking
 2      | ITpattern | A specific pattern to compare the object to (more about this later)
 3      | string?   | The name of the root object when logs display errors. Defaults to `*` as root
+--------------------------------------------------------------------------
 
 The type `ITpattern` is something you don't need to worry about. Just know that it is the Typescript type for a pattern. Patterns can look like `Tstring()` or `Tnumber()`. Because there are quite a few Patterns, we will generalise them by calling them `T{type}()` functions
 
@@ -58,7 +59,7 @@ console.log(Check(0, Tstring()))
 // > [ false, [ '*: Expected (*) to be of type `string`' ] ]
 ```
 
-Notice that in the error message, the root element is called `*` because as mentioned earlier, if we don't pass a third parameter into the Check() function, it names the root `*` by default.
+Notice that in the error message, the root element is called `*` because as mentioned earlier, if we don't pass a third parameter into the `Check()` function, it names the root `*` by default.
 
 The function `Tstring` with nothing in the parameters represents a Type string (T for type and string for string, therefore: Tstring). This method can also take in items in the parameters:
 
@@ -73,27 +74,27 @@ import Check, { Tstring } from "validate-all-types"
 
 console.log(Check("string", Tstring()))
 // > [ true, [] ]
-//  This returned true because "string" is a string
+// This returned true because "string" is a string
 
 console.log(Check(0, Tstring()))
 // > [ false, [ '*: Expected (*) to be of type `string`' ] ]
-//  This returned false because 0 is not a string
+// This returned false because 0 is not a string
 
 console.log(Check("string", Tstring(/^string$/)))
 // > [ true, [] ]
-//  This returned true because "string" matches the RegExp /^string$/
+// This returned true because "string" matches the RegExp /^string$/
 
 console.log(Check("string", Tstring(/^something-else$/)))
 // > [ false, [ '*: Expected (*) to match RegExp (/^something-else$/)' ] ]
-//  This returned false because "string" didn't match the RegExp /^something-else$/
+// This returned false because "string" didn't match the RegExp /^something-else$/
 
 console.log(Check("string", Tstring("does", "the", "string", "match", "?")))
 // > [ true, [] ]
-//  This returned true because "string" was passed into Tstring() as a parameter
+// This returned true because "string" was passed into Tstring() as a parameter
 
 console.log(Check("string", Tstring("doesn't", "match"), "my-string"))
 // > [ false, [ `my-string: Expected (my-string) to be in (["doesn't","match"])` ] ]
-//  This returns false because "string" wasn't passed into Tstring() as a parameter
+// This returns false because "string" wasn't passed into Tstring() as a parameter
 // Since I passed a third parameter to the Check function, the root got renamed
 ```
 
@@ -283,11 +284,11 @@ console.log(Check(
 // We can even nest Tobject() in Tobject()
 ```
 
-## Using `validate-all-types` with Express
+## Using `ValidateRequest` with Express
 You can also import a middleware to be used with express. This way, you can verify the types of the `req.body` or `req.params` before invalid types mess your server up
 
 ```ts
-import Check, { ValidateRequest } from "validate-all-types"
+import { ValidateRequest } from "validate-all-types"
 
 // ----snip----
 

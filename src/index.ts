@@ -20,13 +20,21 @@ const Check = (obj: any, pattern: ITpattern, name?: string): [boolean, string[]]
 	return [pattern(obj)(reporter), reporter.reports]
 }
 
-const ValidateRequest = (item: "body" | "params", pattern: ITpattern) => (
+const ValidateRequest = (item: "body" | "params", pattern: ITpattern, password?: string) => (
 	req: any,
 	res: any,
 	next: Function
 ) => {
+	const DEV = !!password && password === "developer"
 	const obj = req[item]
+	
+	if (DEV) console.log("obj: ", obj)
+	
 	const [success, errors] = Check(obj, pattern, item)
+	
+	if (DEV) console.log("success: ", success)
+	if (DEV) console.log("errors: ", errors)
+	
 	if (success) next()
 	else res.status(400).send(errors)
 }
