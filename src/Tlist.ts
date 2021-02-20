@@ -33,17 +33,18 @@ export default function Tlist(...pattern: ITpattern[]): ITlist {
 			)
 			return false
 		}
+
+		let hasError = false
 		for (let i = 0, il = items.length; i < il; i++) {
 			const item = items[i]
 			let fulfilled = false
-			const types = []
 			for (let j = 0, jl = pattern.length; j < jl; j++) {
 				const patt = pattern[j]
-				types.push(patt.name)
 				// * patt: ITstring | ITnumber | ITboolean
-				if (patt(item)(reporter.mute().setStack(`[${i}]`)))
+				if (patt(item)(reporter.mute().setStack(`[${i}]`))) {
 					fulfilled = true
-				if (fulfilled) break
+					break
+				}
 			}
 
 			if (!fulfilled) {
@@ -51,10 +52,10 @@ export default function Tlist(...pattern: ITpattern[]): ITlist {
 					.unmute()
 					.setStack(`[${i}]`)
 					.complain(`Expected [${i}] to be of pattern defined`)
-				return false
+				hasError = true
 			}
 		}
 
-		return true
+		return !hasError
 	}
 }
