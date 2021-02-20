@@ -37,7 +37,6 @@ export default function Tobject(pattern?: {
 			}
 		}
 
-		hasError = false
 		for (let i = 0, il = keys.length; i < il; i++) {
 			const key = keys[i]
 			const value = item[key]
