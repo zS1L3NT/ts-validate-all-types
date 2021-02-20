@@ -9,11 +9,14 @@ import Tundefined, { ITundefined } from "./Tundefined"
 
 /**
  * Function to check the type of an expression
+ * @param obj Object to check the type of
+ * @param pattern Pattern to compare with the object
+ * @param name OPTIONAL name for the root of the Object for the logs
  * @return [1]: Boolean of whether the object matches the Pattern
  * @return [2]: Error messages if any
  */
-const Check = (obj: any, pattern: ITpattern): [boolean, string[]] => {
-	const reporter = new Reporter(false, ["*"], [])
+const Check = (obj: any, pattern: ITpattern, name?: string): [boolean, string[]] => {
+	const reporter = new Reporter(false, [name || "*"], [])
 	return [pattern(obj)(reporter), reporter.reports]
 }
 
@@ -23,7 +26,7 @@ const ValidateRequest = (item: "body" | "params", pattern: ITpattern) => (
 	next: Function
 ) => {
 	const obj = req[item]
-	const [success, errors] = Check(obj, pattern)
+	const [success, errors] = Check(obj, pattern, item)
 	if (success) next()
 	else res.status(400).send(errors)
 }
