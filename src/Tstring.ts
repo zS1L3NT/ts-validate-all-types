@@ -25,13 +25,15 @@ export default function Tstring(...pattern: any[]): ITstring {
 		// Regex
 		return item => reporter => {
 			const type_ = typeof item === "string"
-			const regex_ = item.match(pattern[0])
-				? item.match(pattern[0])!.length > 0
-				: false
-			if (!type_)
+			if (!type_) {
 				reporter.complain(
 					`Expected (${reporter.getStack()}) to be of type \`string\``
 				)
+				return false
+			}
+			const regex_ = item.match(pattern[0])
+				? item.match(pattern[0])!.length > 0
+				: false
 			if (!regex_)
 				reporter.complain(
 					`Expected (${reporter.getStack()}) to match RegExp (${
