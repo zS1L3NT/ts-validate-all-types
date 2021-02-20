@@ -36,7 +36,6 @@ export default function Tobject(pattern?: {
 				hasError = true
 			}
 		}
-		if (hasError) return false
 
 		hasError = false
 		for (let i = 0, il = keys.length; i < il; i++) {
