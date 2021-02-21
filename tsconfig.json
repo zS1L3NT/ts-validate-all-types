@@ -15,7 +15,6 @@
 		"strictFunctionTypes": true,
 		"outDir": "build",
 		"rootDir": "src",
-		"sourceMap": true,
 		"declaration": true
 	}
 }

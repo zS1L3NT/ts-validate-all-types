@@ -76,6 +76,6 @@ export {
 	Tobject,
 	Tnull,
 	Tundefined,
-	ITpattern
+	ITpattern,
+	Check
 }
-export default Check

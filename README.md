@@ -16,10 +16,10 @@ or
 then import the module like this:
 ```js
 // Typescript
-import Check, { ... } from "validate-all-types"
+import { Check, ... } from "validate-all-types"
 
 // Javascript
-// ...In testing...
+const { Check, ... } = require("validate-all-types")
 ```
 Typescript typings are automatically included so there's no need to install anything like `@types/validate-all-types` !
 
@@ -70,7 +70,7 @@ RegExp      | Checks if the input is a string and matches the RegExp
 ...string[] | Checks if the input is a string and matches any of the given strings
 
 ```ts
-import Check, { Tstring } from "validate-all-types"
+import { Check, Tstring } from "validate-all-types"
 
 console.log(Check("string", Tstring()))
 // > [ true, [] ]
@@ -109,7 +109,7 @@ Type        | Description
 ...number[] | Checks if the input is a number and matches any of the given numbers
 
 ```ts
-import Check, { Tnumber } from "validate-all-types"
+import { Check, Tnumber } from "validate-all-types"
 
 console.log(Check(3, Tnumber()))
 // > [ true, [] ]
@@ -132,7 +132,7 @@ Type    | Description
 boolean | Checks if the input is a boolean and if the booleans are equal
 
 ```ts
-import Check, { Tboolean } from "validate-all-types"
+import { Check, Tboolean } from "validate-all-types"
 
 console.log(Check(true, Tboolean()))
 // > [ true, [] ]
@@ -154,7 +154,7 @@ Type        | Description
 (empty)     | Checks if the input is a null
 
 ```ts
-import Check, { Tnull } from "validate-all-types"
+import { Check, Tnull } from "validate-all-types"
 
 console.log(Check(null, Tnull()))
 // > [ true, [] ]
@@ -170,7 +170,7 @@ Type        | Description
 (empty)     | Checks if the input is a undefined
 
 ```ts
-import Check, { Tundefined } from "validate-all-types"
+import { Check, Tundefined } from "validate-all-types"
 
 console.log(Check(undefined, Tundefined()))
 // > [ true, [] ]
@@ -190,7 +190,7 @@ Type           | Description
 You can put in `T{type}()` functions as parameters for `Tlist()` so as to do stricter checking of types
 
 ```ts
-import Check, { Tlist, Tstring, Tnumber } from "validate-all-types"
+import { Check, Tlist, Tstring, Tnumber } from "validate-all-types"
 
 console.log(Check([1, 2, 3, 4, 5], Tlist()))
 // > [ true, [] ]
@@ -234,7 +234,7 @@ This way, we can make checking of list types much more detailed
 Last but not least, in fact most importantly, we can use `Tobject()` to validate objects. Tobject only allows 1 optional parameter which maps out what the inner properties will look like
 
 ```ts
-import Check, { Tobject } from "validate-all-types"
+import { Check, Tobject } from "validate-all-types"
 
 console.log(Check({ property: "value" }, Tobject()))
 // > [ true, [] ]
@@ -288,7 +288,7 @@ console.log(Check(
 You can also import a middleware to be used with express. This way, you can verify the types of the `req.body` or `req.params` before invalid types mess your server up
 
 ```ts
-import { ValidateRequest } from "validate-all-types"
+import { ValidateRequest, Tobject, Tstring } from "validate-all-types"
 
 // ----snip----
 
