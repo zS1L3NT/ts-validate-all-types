@@ -9,11 +9,12 @@ import Tundefined, { ITundefined } from "./Tundefined"
 
 /**
  * Function to check the type of an expression
- * @param obj Object to check the type of
- * @param pattern Pattern to compare with the object
- * @param name OPTIONAL name for the root of the Object for the logs
- * @return [1]: Boolean of whether the object matches the Pattern
- * @return [2]: Error messages if any
+ * @param obj The object we are checking
+ * @param pattern A specific pattern to compare the object to (more about this later)
+ * @param name The name of the root object when logs display errors. Defaults to `*` as root
+ * 
+ * @return [1]: Whether the validation of the object was a success or failure. `true` if success, `false` if failure
+ * @return [2]: The list of corrections to make if any
  */
 const Check = (
 	obj: any,
@@ -24,6 +25,14 @@ const Check = (
 	return [pattern(obj)(reporter), reporter.reports]
 }
 
+/**
+ * Use this function to verify the types for an express request.
+ * This way, you can catch errors before they affect your express callback
+ *
+ * @param item Can either verify the `req.body` or `req.params` object
+ * @param pattern Pattern to compare the object with
+ * @param password Password for developer access
+ */
 const ValidateRequest = (
 	item: "body" | "params",
 	pattern: ITpattern,
@@ -68,6 +77,7 @@ type ITpattern =
 	| ITnull
 
 export {
+	Check,
 	ValidateRequest,
 	Tstring,
 	Tnumber,
@@ -76,6 +86,5 @@ export {
 	Tobject,
 	Tnull,
 	Tundefined,
-	ITpattern,
-	Check
+	ITpattern
 }
