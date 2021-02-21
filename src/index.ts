@@ -39,7 +39,7 @@ const ValidateRequest = (
 	if (DEV) console.log("success: ", success)
 	if (DEV) console.log("errors: ", errors)
 
-	if (success !== errors.length > 0) {
+	if (success === errors.length > 0) {
 		res.status(500).send({
 			message:
 				"Error with typechecking. Create an issue on https://github.com/zS1L3NT/validate-all-types with your PATTERN and the `data` object in this error",
