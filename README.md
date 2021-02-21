@@ -68,6 +68,7 @@ Type        | Description
 (empty)     | Checks if the input is a string
 RegExp      | Checks if the input is a string and matches the RegExp
 ...string[] | Checks if the input is a string and matches any of the given strings
+<br>
 
 ```ts
 import { Check, Tstring } from "validate-all-types"
@@ -107,6 +108,7 @@ Type        | Description
 ------------|------------------------------------------------------
 (empty)     | Checks if the input is a number
 ...number[] | Checks if the input is a number and matches any of the given numbers
+<br>
 
 ```ts
 import { Check, Tnumber } from "validate-all-types"
@@ -130,6 +132,7 @@ Type    | Description
 --------|---------------------------------------------------------------
 (empty) | Checks if the input is a boolean
 boolean | Checks if the input is a boolean and if the booleans are equal
+<br>
 
 ```ts
 import { Check, Tboolean } from "validate-all-types"
@@ -152,6 +155,7 @@ console.log(Check(false, Tboolean(true)))
 Type        | Description
 ------------|------------------------------------------------------
 (empty)     | Checks if the input is a null
+<br>
 
 ```ts
 import { Check, Tnull } from "validate-all-types"
@@ -168,6 +172,7 @@ Just like `Tnull()`, `Tundefined()` doesn't allow variations of the parameters
 Type        | Description
 ------------|------------------------------------------------------
 (empty)     | Checks if the input is a undefined
+<br>
 
 ```ts
 import { Check, Tundefined } from "validate-all-types"
@@ -188,6 +193,7 @@ Type           | Description
 ...ITPattern[] | Checks if the input is a list and checks if all items in the list match at least 1 of the Patterns stated
 
 You can put in `T{type}()` functions as parameters for `Tlist()` so as to do stricter checking of types
+<br>
 
 ```ts
 import { Check, Tlist, Tstring, Tnumber } from "validate-all-types"
@@ -282,6 +288,96 @@ console.log(Check(
 ))
 // > [ true, [] ]
 // We can even nest Tobject() in Tobject()
+```
+
+## Validating with logical operators
+We can combine what we've learnt and move on to the next Chapter. We can use logical operators to string together more complex pattern types.
+
+### Validating the OR operation with `Tor()`
+If you want either of a few patterns to match, use the `Tor()` operator. This function takes multiple parameters:
+Type           | Description
+---------------|-------------
+...ITpattern[] | A list of patterns to test on the input
+<br>
+
+```ts
+import { Check, Tor, Tstring, Tnumber, Tboolean } from "validate-all-types"
+
+console.log(Check("string", Tor()))
+// > [
+// >     false,
+// >     [
+// >         '*: Expected developer to provide at least 1 pattern for the OR operation'
+// >     ]
+// > ]
+
+console.log(Check(
+	"string",
+	Tor(Tstring(), Tnumber())
+))
+// > [ true, [] ]
+
+console.log(Check(
+	"string",
+	Tor(Tboolean(), Tnumber())
+))
+// > [
+// >     false,
+// >     [ '*: Expected (*) to match at least one of the given patterns' ]
+// > ]
+```
+
+### Validating the AND operation with `Tand()`
+If you need an object to be of multiple patterns at once, (WHY would anyone need this???) you can use the `Tand()` operator. This operator works the same way as the `Tor()` operator and takes a few parameters:
+Type           | Description
+---------------|------------------------------------------
+...ITpattern[] | A list of patterns to test on the input
+<br>
+
+```ts
+import { Check, Tand, Tstring, Tboolean } from "validate-all-types"
+
+console.log(Check("string", Tand()))
+// > [
+// >     false,
+// >     [
+// >         '*: Expected developer to provide at least 1 pattern for the AND operation'
+// >     ]
+// > ]
+
+console.log(Check(
+	"string",
+	Tand(
+		Tstring(),
+		Tstring("string"),
+		Tstring(/^string$/)
+	)
+))
+// > [ true, [] ]
+
+console.log(Check(
+	"string",
+	Tand(Tstring("string"), Tboolean())
+))
+// > [ false, [ '*: Expected (*) to be of type `boolean`' ] ]
+```
+Developer side-note: You probably won't ever need to use this. This module was just included just in case someone needed it. Almost all the time, types don't cross over. You can't have a variable of type "string" AND "number" at once!!!
+
+### Validating the NOT operation with `Tnot()`
+If you want the result of a pattern to be flipped, you can use the `Tnot()` operator which takes only 1 parameter:
+Type      | Description
+----------|-----------------------------------------
+ITpattern | Pattern which boolean should be reversed
+This is applicable in cases where you don't want a variable to be of a certain type
+
+```ts
+import { Check, Tnot, Tstring, Tnumber } from "validate-all-types"
+
+console.log(Check("string", Tnot(Tnumber())))
+// > [ true, [] ]
+
+console.log(Check("string", Tnot(Tstring())))
+// > [ false, [ '*: Expected (*) to not match the given pattern' ] ]
 ```
 
 ## Using `ValidateRequest` with Express

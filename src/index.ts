@@ -6,13 +6,16 @@ import Tlist, { ITlist } from "./Tlist"
 import Tobject, { ITobject } from "./Tobject"
 import Tnull, { ITnull } from "./Tnull"
 import Tundefined, { ITundefined } from "./Tundefined"
+import Tor, { ITor } from "./Tor"
+import Tand, { ITand } from "./Tand"
+import Tnot, { ITnot } from "./Tnot"
 
 /**
  * Function to check the type of an expression
  * @param obj The object we are checking
  * @param pattern A specific pattern to compare the object to (more about this later)
  * @param name The name of the root object when logs display errors. Defaults to `*` as root
- * 
+ *
  * @return [1]: Whether the validation of the object was a success or failure. `true` if success, `false` if failure
  * @return [2]: The list of corrections to make if any
  */
@@ -73,8 +76,11 @@ type ITpattern =
 	| ITboolean
 	| ITlist
 	| ITobject
-	| ITundefined
 	| ITnull
+	| ITundefined
+	| ITor
+	| ITand
+	| ITnot
 
 export {
 	Check,
@@ -86,5 +92,8 @@ export {
 	Tobject,
 	Tnull,
 	Tundefined,
+	Tor,
+	Tand,
+	Tnot,
 	ITpattern
 }
