@@ -368,6 +368,7 @@ If you want the result of a pattern to be flipped, you can use the `Tnot()` oper
 Type      | Description
 ----------|-----------------------------------------
 ITpattern | Pattern which boolean should be reversed
+
 This is applicable in cases where you don't want a variable to be of a certain type
 
 ```ts
