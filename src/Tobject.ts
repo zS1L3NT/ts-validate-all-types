@@ -13,7 +13,7 @@ export type ITobject = (item: any) => (reporter: Reporter) => boolean
 export default function Tobject(pattern?: {
 	[property: string]: ITpattern | undefined
 }): ITobject {
-	return item => reporter => {
+	return (item) => (reporter) => {
 		const type_ = typeof item === "object"
 		if (!type_) {
 			reporter.complain(`Expected (${item}) to be of type \`object\``)
@@ -29,10 +29,17 @@ export default function Tobject(pattern?: {
 		for (let i = 0, il = patternKeys.length; i < il; i++) {
 			const patternKey = patternKeys[i]
 			const indexOf_ = keys.indexOf(patternKey) >= 0
-			if (!indexOf_) {
-				reporter.complain(
-					`Expected (${reporter.getStack()}) to contain property (${patternKey})`
-				)
+
+			const propertyCanBeUndefined = pattern[patternKey]!(undefined)(
+				reporter.mute().setStack(patternKey)
+			)
+
+			if (!indexOf_ && !propertyCanBeUndefined) {
+				reporter
+					.unmute()
+					.complain(
+						`Expected (${reporter.getStack()}) to contain property (${patternKey})`
+					)
 				hasError = true
 			}
 		}

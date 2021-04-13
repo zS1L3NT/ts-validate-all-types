@@ -1,14 +1,14 @@
 {
 	"name": "validate-all-types",
-	"version": "1.4.0",
+	"version": "1.4.1",
 	"description": "Validator for all interfaces",
 	"main": "build/index.js",
 	"types": "build/index.d.ts",
-	"author": "zS1L3NT <zechariahtan144@gmail.com> (http://www.bubblejs.com)",
+	"author": "zS1L3NT <zechariahtan144@gmail.com> (http://www.zectan.com)",
 	"license": "ISC",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/zS1L3NT/validate-all-types"
+		"url": "https://github.com/zS1L3NT/ts-validate-all-types"
 	},
 	"dependencies": {},
 	"engines": {
