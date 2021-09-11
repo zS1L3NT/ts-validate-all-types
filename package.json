@@ -1,6 +1,6 @@
 {
 	"name": "validate-all-types",
-	"version": "1.4.1",
+	"version": "1.5.0",
 	"description": "Validator for all interfaces",
 	"main": "build/index.js",
 	"types": "build/index.d.ts",
@@ -16,6 +16,7 @@
 	},
 	"engineStrict": true,
 	"devDependencies": {
+		"@types/node": "^16.9.1",
 		"ts-node": "^9.1.1",
 		"typescript": "^4.1.5"
 	}

@@ -4,7 +4,9 @@
 
 
 ## What is `validate-all-types`?
-This package is a type validator mainly for Typescript (also works with Javascript). Ever faced those issues where you're trying to make sure a type `any` is an instance of an interface? This is the issue this package was designed to solve. With this package, you can safely assert the type for an object and return customised errors if the types are incorrect
+This package is a type validator mainly for Typescript (also works with Javascript).
+Ever faced those issues where you're trying to make sure a type `any` is an instance of an interface? This is the issue this package was designed to solve.
+With this package, you can safely assert the type for an object and return customised errors if the types are incorrect
 
 ## Installation & Usage
 > $ npm install validate-all-types
@@ -14,383 +16,391 @@ or
 > $ yarn add validate-all-types
 
 then import the module like this:
-```js
+```ts
 // Typescript
-import { Check, ... } from "validate-all-types"
+import { validate } from "validate-all-types"
 
 // Javascript
-const { Check, ... } = require("validate-all-types")
+const { validate } = require("validate-all-types")
 ```
 Typescript typings are automatically included so there's no need to install anything like `@types/validate-all-types` !
 
 
-## How the Check function works
-The `Check` object we imported earlier is a function which can take 2 (3: optional) parameters.
+## How the `validate` function works
+The `validate` object we imported earlier is a function which can take 2 (3: optional) parameters.
 
-### Check's parameters:
+### `validate` parameters:
 Number | Type      | Description
 -------|-----------|------------------------------------------------------
-1      | any       | The object we are checking
-2      | ITpattern | A specific pattern to compare the object to (more about this later)
-3      | string?   | The name of the root object when logs display errors. Defaults to `*` as root
+`1`    | `any`     | The object we are checking
+`2`    | `iPattern`| A specific pattern to compare the object to (more about this later)
+`3`    | `string?` | The name of the root object when logs display errors. Defaults to `*` as root
 --------------------------------------------------------------------------
 
-The type `ITpattern` is something you don't need to worry about. Just know that it is the Typescript type for a pattern. Patterns can look like `Tstring()` or `Tnumber()`. Because there are quite a few Patterns, we will generalise them by calling them `T{type}()` functions
+The type `iPattern` is something you don't need to worry about.
+Just know that it is the Typescript type for a pattern.
+Patterns can look like `STRING()` or `NUMBER()`.
 
-### Check returns a list of:
-Index | Type     | Description
-------|----------|---------------------------------------------------------
-0     | boolean  | Whether the validation of the object was a success or failure. `true` if success, `false` if failure
-1     | string[] | The list of corrections to make if any
+### `validate` returns an object containing:
+Property | Type       | Description
+---------|------------|---------------------------------------------------------
+success  | `boolean`  | Whether the validation of the object was a success or failure. `true` if success, `false` if failure
+errors   | `string[]` | The list of corrections to make if any
 
 
 ## Making a pattern
-There are infinite combinations of patterns we can make. The complexity of the pattern only depends on how much code you are willing to write.
+There are infinite combinations of patterns we can make.
+The complexity of the pattern only depends on how much code you are willing to write.
 
 ### Validation basics with a string
-Because you have no idea how `T{type}()` functions works, I will use the string example to teach you exactly how the `T{type}()` functions work in full detail so this first chapter may be a bit long winded... All the `T{type}()` functions are importable from the module
-
 Here is how to validate a string
 ```ts
-console.log(Check("string", Tstring()))
-// > [ true, [] ]
+console.log(validate("string", STRING()))
+// > { success: true, errors: [] }
 
-console.log(Check(0, Tstring()))
-// > [ false, [ '*: Expected (*) to be of type `string`' ] ]
+console.log(validate(0, STRING()))
+// > { success: false, errors: [ '*: Expected (*) to be of type `string`' ] }
 ```
 
-Notice that in the error message, the root element is called `*` because as mentioned earlier, if we don't pass a third parameter into the `Check()` function, it names the root `*` by default.
+Notice that in the error message, the root element is called `*`
+because as mentioned earlier, if we don't pass a third parameter into the `validate()` function, it names the root `*` by default.
 
-The function `Tstring` with nothing in the parameters represents a Type string (T for type and string for string, therefore: Tstring). This method can also take in items in the parameters:
+The function `STRING` with nothing in the parameters represents a type string.
+This method can also take in items in the parameters:
 
-Type        | Description
-------------|------------------------------------------------------
-(empty)     | Checks if the input is a string
-RegExp      | Checks if the input is a string and matches the RegExp
-...string[] | Checks if the input is a string and matches any of the given strings
+Type          | Description
+--------------|------------------------------------------------------
+`(empty)`     | validates if the input is a string
+`RegExp`      | validates if the input is a string and matches the RegExp
+`...string[]` | validates if the input is a string and matches any of the given strings
 <br>
 
 ```ts
-import { Check, Tstring } from "validate-all-types"
+import { validate, STRING } from "validate-all-types"
 
-console.log(Check("string", Tstring()))
-// > [ true, [] ]
+console.log(validate("string", STRING()))
+// > { success: true, errors: [] }
 // This returned true because "string" is a string
 
-console.log(Check(0, Tstring()))
-// > [ false, [ '*: Expected (*) to be of type `string`' ] ]
+console.log(validate(0, STRING()))
+// > { success: false, errors: [ '*: Expected (*) to be of type `string`' ] }
 // This returned false because 0 is not a string
 
-console.log(Check("string", Tstring(/^string$/)))
-// > [ true, [] ]
+console.log(validate("string", STRING(/^string$/)))
+// > { success: true, errors: [] }
 // This returned true because "string" matches the RegExp /^string$/
 
-console.log(Check("string", Tstring(/^something-else$/)))
-// > [ false, [ '*: Expected (*) to match RegExp (/^something-else$/)' ] ]
+console.log(validate("string", STRING(/^something-else$/)))
+// > { success: false, errors: [ '*: Expected (*) to match RegExp (/^something-else$/)' ] }
 // This returned false because "string" didn't match the RegExp /^something-else$/
 
-console.log(Check("string", Tstring("does", "the", "string", "match", "?")))
-// > [ true, [] ]
-// This returned true because "string" was passed into Tstring() as a parameter
+console.log(validate("string", STRING("does", "the", "string", "match", "?")))
+// > { success: true, errors: [] }
+// This returned true because "string" was passed into STRING() as a parameter
 
-console.log(Check("string", Tstring("doesn't", "match"), "my-string"))
-// > [ false, [ `my-string: Expected (my-string) to be in (["doesn't","match"])` ] ]
-// This returns false because "string" wasn't passed into Tstring() as a parameter
-// Since I passed a third parameter to the Check function, the root got renamed
+console.log(validate("string", STRING("doesn't", "match"), "my-string"))
+// > { success: false, errors: [ `my-string: Expected (my-string) to be in (["doesn't","match"])` ] }
+// This returns false because "string" wasn't passed into STRING() as a parameter
+// Since I passed a third parameter to the validate function, the root got renamed
 ```
 
-Whew! That was quite a steep learning curve... Now since you already know the basics of how `Check()` and `Tstring()` works, it should be much easier from here on
+### Validating a number with `NUMBER()`
+Because `STRING()` validates strings, it's obvious that `NUMBER()` validates numbers. `NUMBER()` works the same was as `STRING()` except allows a different set of parameters:
 
-### Validating a number with `Tnumber()`
-Because `Tstring()` validates strings, it's obvious that `Tnumber()` validates numbers. `Tnumber()` works the same was as `Tstring()` except allows a different set of parameters:
+Type          | Description
+--------------|------------------------------------------------------
+`(empty)`     | validates if the input is a number
+`...number[]` | validates if the input is a number and matches any of the given numbers
+<br>
 
+```ts
+import { validate, NUMBER } from "validate-all-types"
+
+console.log(validate(3, NUMBER()))
+// > { success: true, errors: [] }
+
+console.log(validate("string", NUMBER()))
+// > { success: false, errors: [ '*: Expected (*) to be of type `number`' ] }
+
+console.log(validate(3, NUMBER(1, 2, 3, 4, 5)))
+// > { success: true, errors: [] }
+
+console.log(validate(3, NUMBER(6, 7, 8, 9, 10)))
+// > { success: false, errors: [ '*: Expected (*) to be in ([6,7,8,9,10])' ] }
+```
+
+### Validating a boolean with `BOOLEAN()`
+`BOOLEAN()` allows comparison of booleans only
+
+Type      | Description
+----------|---------------------------------------------------------------
+`(empty)` | validates if the input is a boolean
+`boolean` | validates if the input is a boolean and if the booleans are equal
+<br>
+
+```ts
+import { validate, BOOLEAN } from "validate-all-types"
+
+console.log(validate(true, BOOLEAN()))
+// > { success: true, errors: [] }
+
+console.log(validate("string", BOOLEAN()))
+// > { success: false, errors: [ '*: Expected (*) to be of type `boolean`' ] }
+
+console.log(validate(true, BOOLEAN(true)))
+// > { success: true, errors: [] }
+
+console.log(validate(false, BOOLEAN(true)))
+// > { success: false, errors: [ '*: Expected (*) to be `true`' ] }
+```
+
+### Validating null with `NULL()`
+`NULL()` doesn't allow variations of the parameters
+
+Type       | Description
+-----------|------------------------------------------------------
+`(empty)`  | validates if the input is a null
+<br>
+
+```ts
+import { validate, NULL } from "validate-all-types"
+
+console.log(validate(null, NULL()))
+// > { success: true, errors: [] }
+
+console.log(validate(undefined, NULL()))
+// > { success: false, errors: [ '*: Expected (*) to be of type `null`' ] }
+```
+
+### Validating undefined with `UNDEFINED()`
+Just like `NULL()`, `UNDEFINED()` doesn't allow variations of the parameters
 Type        | Description
 ------------|------------------------------------------------------
-(empty)     | Checks if the input is a number
-...number[] | Checks if the input is a number and matches any of the given numbers
+(empty)     | validates if the input is a undefined
 <br>
 
 ```ts
-import { Check, Tnumber } from "validate-all-types"
+import { validate, UNDEFINED } from "validate-all-types"
 
-console.log(Check(3, Tnumber()))
-// > [ true, [] ]
+console.log(validate(undefined, UNDEFINED()))
+// > { success: true, errors: [] }
 
-console.log(Check("string", Tnumber()))
-// > [ false, [ '*: Expected (*) to be of type `number`' ] ]
-
-console.log(Check(3, Tnumber(1, 2, 3, 4, 5)))
-// > [ true, [] ]
-
-console.log(Check(3, Tnumber(6, 7, 8, 9, 10)))
-// > [ false, [ '*: Expected (*) to be in ([6,7,8,9,10])' ] ]
+console.log(validate(null, UNDEFINED()))
+// > { success: false, errors: [ '*: Expected (*) to be of type `undefined`' ] }
 ```
 
-### Validating a boolean with `Tboolean()`
-`Tboolean()` allows comparison of booleans only
-Type    | Description
---------|---------------------------------------------------------------
-(empty) | Checks if the input is a boolean
-boolean | Checks if the input is a boolean and if the booleans are equal
+### Validating a list with `LIST()`
+This one's a bit more complicated. `LIST()` allows a few sets of parameters:
+
+Type            | Description
+----------------|------------------------------------------------------
+`(empty)`       | validates if the input is a list
+`...iPattern[]` | validates if the input is a list and checks if all items in the list match at least 1 of the Patterns stated
 <br>
 
 ```ts
-import { Check, Tboolean } from "validate-all-types"
+import { validate, LIST, STRING, NUMBER } from "validate-all-types"
 
-console.log(Check(true, Tboolean()))
-// > [ true, [] ]
+console.log(validate([1, 2, 3, 4, 5], LIST()))
+// > { success: true, errors: [] }
 
-console.log(Check("string", Tboolean()))
-// > [ false, [ '*: Expected (*) to be of type `boolean`' ] ]
+console.log(validate({ property: "value" }, LIST()))
+// > { success: false, errors: [ '*: Expected (*) to be of type `array`' ] }
 
-console.log(Check(true, Tboolean(true)))
-// > [ true, [] ]
+console.log(validate(["one", "two", "three"], LIST(STRING())))
+// > { success: true, errors: [] }
 
-console.log(Check(false, Tboolean(true)))
-// > [ false, [ '*: Expected (*) to be `true`' ] ]
-```
+console.log(validate([1, "two", 3], LIST(NUMBER())))
+// > { success: false, errors: [ '* > [1]: Expected [1] to be of pattern defined' ] }
 
-### Validating null with `Tnull()`
-`Tnull()` doesn't allow variations of the parameters
-Type        | Description
-------------|------------------------------------------------------
-(empty)     | Checks if the input is a null
-<br>
+console.log(validate([1, "two", []], LIST(STRING(), NUMBER(), LIST())))
+// > { success: true, errors: [] }
+// And yes we also can verify LIST() within LIST()
 
-```ts
-import { Check, Tnull } from "validate-all-types"
-
-console.log(Check(null, Tnull()))
-// > [ true, [] ]
-
-console.log(Check(undefined, Tnull()))
-// > [ false, [ '*: Expected (*) to be of type `null`' ] ]
-```
-
-### Validating undefined with `Tundefined()`
-Just like `Tnull()`, `Tundefined()` doesn't allow variations of the parameters
-Type        | Description
-------------|------------------------------------------------------
-(empty)     | Checks if the input is a undefined
-<br>
-
-```ts
-import { Check, Tundefined } from "validate-all-types"
-
-console.log(Check(undefined, Tundefined()))
-// > [ true, [] ]
-
-console.log(Check(null, Tundefined()))
-// > [ false, [ '*: Expected (*) to be of type `undefined`' ] ]
-```
-
-### Validating a list with `Tlist()`
-This one's a bit more complicated. `Tlist()` allows a few sets of parameters:
-
-Type           | Description
----------------|------------------------------------------------------
-(empty)        | Checks if the input is a list
-...ITPattern[] | Checks if the input is a list and checks if all items in the list match at least 1 of the Patterns stated
-
-You can put in `T{type}()` functions as parameters for `Tlist()` so as to do stricter checking of types
-<br>
-
-```ts
-import { Check, Tlist, Tstring, Tnumber } from "validate-all-types"
-
-console.log(Check([1, 2, 3, 4, 5], Tlist()))
-// > [ true, [] ]
-
-console.log(Check({ property: "value" }, Tlist()))
-// > [ false, [ '*: Expected (*) to be of type `array`' ] ]
-
-console.log(Check(["one", "two", "three"], Tlist(Tstring())))
-// > [ true, [] ]
-
-console.log(Check([1, "two", 3], Tlist(Tnumber())))
-// > [ false, [ '* > [1]: Expected [1] to be of pattern defined' ] ]
-
-console.log(Check([1, "two", []], Tlist(Tstring(), Tnumber(), Tlist())))
-// > [ true, [] ]
-// And yes we also can verify Tlist() within Tlist()
-
-console.log(Check([1, "two", null], Tlist(Tstring(), Tnumber())))
-// > [ false, [ '* > [2]: Expected [2] to be of pattern defined' ] ]
+console.log(validate([1, "two", null], LIST(STRING(), NUMBER())))
+// > { success: false, errors: [ '* > [2]: Expected [2] to be of pattern defined' ] }
 
 const usernames = ["jack", "_jack", "-jack"]
-console.log(Check(usernames, Tlist(Tstring(/^[a-zA-Z]/)))) 
-// > [
-// >     false,
-// >     [
+console.log(validate(usernames, LIST(STRING(/^[a-zA-Z]/)))) 
+// > {
+// >     success: false,
+// >     errors: [
 // >         '* > [1]: Expected [1] to be of pattern defined',
 // >         '* > [2]: Expected [2] to be of pattern defined'
 // >     ]
-// > ]
+// > }
 // Not every username matched /^[a-zA-Z]/
 
 const codes = [34, 76, 92]
-console.log(Check(codes, Tlist(Tnumber(34, 76, 92))))
-// > [ true, [] ]
+console.log(validate(codes, LIST(NUMBER(34, 76, 92))))
+// > { success: true, errors: [] }
 // Every code matched items in [34, 76, 92]
 ```
 
 This way, we can make checking of list types much more detailed
 
-### Validating an object with `Tobject()`
-Last but not least, in fact most importantly, we can use `Tobject()` to validate objects. Tobject only allows 1 optional parameter which maps out what the inner properties will look like
+### Validating an object with `OBJECT()`
+Last but not least, in fact most importantly, we can use `OBJECT()`
+to validate objects. `OBJECT()` only allows 1 optional parameter
+which maps out what the inner properties will look like
 
 ```ts
-import { Check, Tobject } from "validate-all-types"
+import { validate, OBJECT } from "validate-all-types"
 
-console.log(Check({ property: "value" }, Tobject()))
-// > [ true, [] ]
-// Since { property: "value" } is an object, Check() returned true
+console.log(validate({ property: "value" }, OBJECT()))
+// > { success: true, errors: [] }
+// Since { property: "value" } is an object, validate() returned true
 
-console.log(Check(
+console.log(validate({ property: "value" }, OBJECT({})))
+// > {
+// >     success: false,
+// >     errors: [ '* > name: No type definitions for (property)' ]
+// > }
+// The pattern of {} means the object must have no properties
+
+console.log(validate(
 	{ property: "value" },
-	Tobject({ property: Tstring() }
+	OBJECT({ property: STRING() }
 )))
-// > [ true, [] ]
-// We set the Tobject's params to an object with a property "property" and a value "value"
-// Since "value" matches Tstring(), Check() returned true
+// > { success: true, errors: [] }
+// We set the OBJECT's params to an object with a property "property" and a value "value"
+// Since "value" matches STRING(), validate() returned true
 
-console.log(Check(
-	{
+console.log(validate({
 		property: "value"
-	},
-	Tobject({
-		prop: Tstring()
+	}, OBJECT({
+		prop: STRING()
 	})
 ))
-// > [
-// >     false,
-// >     [
+// > {
+// >     success: false,
+// >     errors: [
 // >         '*: Expected (*) to contain property (prop)',
 // >         '* > property: No type definitions for (property)'
 // >     ]
-// > ]
+// > }
 // Since there is no property for the type validation "prop", we got an error
 // Since there is no type validation for the property "property", we got an error
 
-console.log(Check(
+console.log(validate(
 	{
 		property: "value",
 		layer: {
 			deepProperty: ["", 0, null, undefined, false]
 		}
 	},
-	Tobject({
-		property: Tstring(),
-		layer: Tobject({
-			deepProperty: Tlist(Tstring(), Tnumber(0), Tnull(), Tundefined(), Tboolean(false))
+	OBJECT({
+		property: STRING(),
+		layer: OBJECT({
+			deepProperty: LIST(STRING(), NUMBER(0), NULL(), UNDEFINED(), BOOLEAN(false))
 		})
 	})
 ))
-// > [ true, [] ]
-// We can even nest Tobject() in Tobject()
+// > { success: true, errors: [] }
+// We can even nest OBJECT() in OBJECT()
 ```
 
 ## Validating with logical operators
-We can combine what we've learnt and move on to the next Chapter. We can use logical operators to string together more complex pattern types.
+We can combine what we've learnt and move on to the next Chapter.
+We can use logical operators to string together more complex pattern types.
 
-### Validating the OR operation with `Tor()`
-If you want either of a few patterns to match, use the `Tor()` operator. This function takes multiple parameters:
-Type           | Description
----------------|-------------
-...ITpattern[] | A list of patterns to test on the input
+### Validating the OR operation with `OR()`
+If you want either of a few patterns to match, use the `OR()` operator.
+This function takes multiple parameters:
+
+Type            | Description
+----------------|-------------
+`...iPattern[]` | A list of patterns to test on the input
 <br>
 
 ```ts
-import { Check, Tor, Tstring, Tnumber, Tboolean } from "validate-all-types"
+import { validate, OR, STRING, NUMBER, BOOLEAN } from "validate-all-types"
 
-console.log(Check("string", Tor()))
-// > [
-// >     false,
-// >     [
-// >         '*: Expected developer to provide at least 1 pattern for the OR operation'
-// >     ]
-// > ]
+console.log(validate("string", OR()))
+// > Error: *: Expected developer to provide at least 1 pattern for the OR operation
+// An OR operation only works with at least one input
 
-console.log(Check(
+console.log(validate(
 	"string",
-	Tor(Tstring(), Tnumber())
+	OR(STRING(), NUMBER())
 ))
-// > [ true, [] ]
+// > { success: true, errors: [] }
 
-console.log(Check(
+console.log(validate(
 	"string",
-	Tor(Tboolean(), Tnumber())
+	OR(BOOLEAN(), NUMBER())
 ))
-// > [
-// >     false,
-// >     [ '*: Expected (*) to match at least one of the given patterns' ]
-// > ]
+// > {
+// >     success: false,
+// >     errors: [ '*: Expected (*) to match at least one of the given patterns' ]
+// > }
 ```
 
-### Validating the AND operation with `Tand()`
-If you need an object to be of multiple patterns at once, (WHY would anyone need this???) you can use the `Tand()` operator. This operator works the same way as the `Tor()` operator and takes a few parameters:
-Type           | Description
----------------|------------------------------------------
-...ITpattern[] | A list of patterns to test on the input
+### Validating the AND operation with `AND()`
+If you need an object to be of multiple patterns at once, you can use the `AND()` operator.
+This operator works the same way as the `OR()` operator and takes a few parameters:
+
+Type            | Description
+----------------|------------------------------------------
+`...iPattern[]` | A list of patterns to test on the input
 <br>
 
 ```ts
-import { Check, Tand, Tstring, Tboolean } from "validate-all-types"
+import { validate, AND, STRING, BOOLEAN } from "validate-all-types"
 
-console.log(Check("string", Tand()))
-// > [
-// >     false,
-// >     [
-// >         '*: Expected developer to provide at least 1 pattern for the AND operation'
-// >     ]
-// > ]
+console.log(validate("string", AND()))
+// > Error: *: Expected developer to provide at least 1 pattern for the AND operation
 
-console.log(Check(
+console.log(validate(
 	"string",
-	Tand(
-		Tstring(),
-		Tstring("string"),
-		Tstring(/^string$/)
+	AND(
+		STRING(),
+		STRING("string"),
+		STRING(/^string$/)
 	)
 ))
-// > [ true, [] ]
+// > { success: true, errors: [] }
 
-console.log(Check(
+console.log(validate(
 	"string",
-	Tand(Tstring("string"), Tboolean())
+	AND(STRING("string"), BOOLEAN())
 ))
-// > [ false, [ '*: Expected (*) to be of type `boolean`' ] ]
+// > { success: false, errors: [ '*: Expected (*) to be of type `BOOLEAN`' ] }
 ```
 Developer side-note: You probably won't ever need to use this. This module was just included just in case someone needed it. Almost all the time, types don't cross over. You can't have a variable of type "string" AND "number" at once!!!
 
-### Validating the NOT operation with `Tnot()`
-If you want the result of a pattern to be flipped, you can use the `Tnot()` operator which takes only 1 parameter:
-Type      | Description
-----------|-----------------------------------------
-ITpattern | Pattern which boolean should be reversed
+### Validating the not operation with `NOT()`
+If you want the result of a pattern to be inverted,
+you can use the `NOT()` operator which takes only 1 parameter:
+
+Type       | Description
+-----------|-----------------------------------------
+`iPattern` | Pattern which boolean should be reversed
 
 This is applicable in cases where you don't want a variable to be of a certain type
 
 ```ts
-import { Check, Tnot, Tstring, Tnumber } from "validate-all-types"
+import { validate, NOT, STRING, NUMBER } from "validate-all-types"
 
-console.log(Check("string", Tnot(Tnumber())))
-// > [ true, [] ]
+console.log(validate("string", NOT(NUMBER())))
+// > { success: true, errors: [] }
 
-console.log(Check("string", Tnot(Tstring())))
-// > [ false, [ '*: Expected (*) to not match the given pattern' ] ]
+console.log(validate("string", NOT(STRING())))
+// > { success: false, errors: [ '*: Expected (*) to not match the given pattern' ] }
 ```
 
-## Using `ValidateRequest` with Express
-You can also import a middleware to be used with express. This way, you can verify the types of the `req.body` or `req.params` before invalid types mess your server up
+## Using `validate_express` with Express.js
+You can also import the module as a middleware to be used with express.
+This way, you can verify the types of the `req.body` or `req.params`
+before invalid types mess your code up
 
 ```ts
-import { ValidateRequest, Tobject, Tstring } from "validate-all-types"
+import { validate_express, OBJECT, STRING } from "validate-all-types"
 
 // ----snip----
 
 app.post("/body",
-	ValidateRequest("body", Tobject({ usnm: Tstring(), pswd: Tstring() })),
+	validate_express("body", OBJECT({ usnm: STRING(), pswd: STRING() })),
 	(req, res) => {
 		const { usnm, pswd } = req.body as { usnm: string, pswd: string }
 		console.log(`Username: ${usnm}`, `Password: ${pswd}`)
@@ -401,10 +411,13 @@ app.post("/body",
 // ----snip----
 ```
 
-The ValidateRequest takes in 2 parameters:
-Number | Type               | Description
--------|--------------------|-------------
-1      | "body" \| "params" | Can either verify the `req.body` or `req.params` object
-2      | ITpattern          | Pattern to compare the object with
+The `validate_express` takes in 2 parameters:
 
-Because of the middleware, in Typescript you can now safely use type assertions. Also, now for both Typescript and Javascript, you can safely use the variables like they are the defined types and not have to worry about invalid types crashing your server!
+Number | Type                  | Description
+-------|-----------------------|-------------
+`1`    | `"body" \| "pattern"` | Can either verify the `req.body` or `req.params` object
+`2`    | `iPattern`            | Pattern to compare the object with
+
+Because of the middleware, in Typescript you can now safely use type assertions.
+Also, now for both Typescript and Javascript, you can safely use the variables like
+they are the defined types and not have to worry about invalid types crashing your server!

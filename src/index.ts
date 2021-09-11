@@ -1,31 +1,53 @@
 import Reporter from "./Reporter"
-import Tstring, { ITstring } from "./Tstring"
-import Tnumber, { ITnumber } from "./Tnumber"
-import Tboolean, { ITboolean } from "./Tboolean"
-import Tlist, { ITlist } from "./Tlist"
-import Tobject, { ITobject } from "./Tobject"
-import Tnull, { ITnull } from "./Tnull"
-import Tundefined, { ITundefined } from "./Tundefined"
-import Tor, { ITor } from "./Tor"
-import Tand, { ITand } from "./Tand"
-import Tnot, { ITnot } from "./Tnot"
+import STRING from "./validators/STRING"
+import NUMBER from "./validators/NUMBER"
+import BOOLEAN from "./validators/BOOLEAN"
+import LIST from "./validators/LIST"
+import OBJECT from "./validators/OBJECT"
+import NULL from "./validators/NULL"
+import UNDEFINED from "./validators/UNDEFINED"
+import OR from "./validators/OR"
+import AND from "./validators/AND"
+import NOT from "./validators/NOT"
+
+/**
+ * Results on how the object pattern matching went
+ *
+ * @param success Whether the data matched the pattern defined
+ * @param errors List of corrections in the data to make
+ */
+interface iValidationResult {
+	success: boolean
+	errors: string[]
+}
 
 /**
  * Function to check the type of an expression
- * @param obj The object we are checking
+ * @param data The object we are checking
  * @param pattern A specific pattern to compare the object to (more about this later)
  * @param name The name of the root object when logs display errors. Defaults to `*` as root
  *
- * @return [1]: Whether the validation of the object was a success or failure. `true` if success, `false` if failure
- * @return [2]: The list of corrections to make if any
+ * @return object The result of whether the object matched the pattern
  */
-const Check = (
-	obj: any,
-	pattern: ITpattern,
-	name?: string
-): [boolean, string[]] => {
-	const reporter = new Reporter(false, [name || "*"], [])
-	return [pattern(obj)(reporter), reporter.reports]
+const validate = (
+	data: any,
+	pattern: iPattern,
+	name: string = "*"
+): iValidationResult => {
+	const reporter = new Reporter([name], [])
+	const result = {
+		success: pattern(data)(reporter, false),
+		errors: reporter.reports
+	}
+
+	if (result.success === result.errors.length > 0) {
+		console.warn("Error with typechecking. Create an issue on https://github.com/zS1L3NT/ts-validate-all-types with the PATTERN AND the data below", {
+			data,
+			errors: result.errors
+		})
+	}
+
+	return result
 }
 
 /**
@@ -34,34 +56,13 @@ const Check = (
  *
  * @param item Can either verify the `req.body` or `req.params` object
  * @param pattern Pattern to compare the object with
- * @param password Password for developer access
  */
-const ValidateRequest = (
+const validate_express = (
 	item: "body" | "params",
-	pattern: ITpattern,
-	password?: string
+	pattern: iPattern
 ) => (req: any, res: any, next: Function) => {
-	const DEV = !!password && password === "developer"
-	const obj = req[item]
-
-	if (DEV) console.log("obj: ", obj)
-
-	const [success, errors] = Check(obj, pattern, item)
-
-	if (DEV) console.log("success: ", success)
-	if (DEV) console.log("errors: ", errors)
-
-	if (success === errors.length > 0) {
-		res.status(500).send({
-			message:
-				"Error with typechecking. Create an issue on https://github.com/zS1L3NT/validate-all-types with your PATTERN and the `data` object in this error",
-			data: {
-				obj,
-				errors
-			}
-		})
-		return
-	}
+	const data = req[item]
+	const { success, errors } = validate(data, pattern, item)
 
 	if (success) next()
 	else res.status(400).send(errors)
@@ -70,30 +71,21 @@ const ValidateRequest = (
 /**
  * & Type for a pattern
  */
-type ITpattern =
-	| ITstring
-	| ITnumber
-	| ITboolean
-	| ITlist
-	| ITobject
-	| ITnull
-	| ITundefined
-	| ITor
-	| ITand
-	| ITnot
+type iPattern = (data: any) => (reporter: Reporter, silent: boolean) => boolean
 
 export {
-	Check,
-	ValidateRequest,
-	Tstring,
-	Tnumber,
-	Tboolean,
-	Tlist,
-	Tobject,
-	Tnull,
-	Tundefined,
-	Tor,
-	Tand,
-	Tnot,
-	ITpattern
+	validate,
+	validate_express,
+	STRING,
+	NUMBER,
+	BOOLEAN,
+	LIST,
+	OBJECT,
+	NULL,
+	UNDEFINED,
+	OR,
+	AND,
+	NOT,
+	iPattern,
+	iValidationResult
 }

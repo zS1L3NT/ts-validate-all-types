@@ -1,0 +1,17 @@
+import { iPattern } from "../index"
+
+/**
+ * Checks if next parameter is of type 'undefined'
+ */
+export default function UNDEFINED(): iPattern {
+	return data => (reporter, silent) => {
+		if (data !== undefined) {
+			return reporter.complain(
+				`Expected (${reporter.getStack()}) to be of type \`undefined\``,
+				silent
+			)
+		}
+
+		return true
+	}
+}
