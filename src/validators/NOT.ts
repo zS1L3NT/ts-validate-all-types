@@ -5,11 +5,10 @@ import { iPattern } from "../index"
  * @param pattern Pattern to compare with
  */
 export default function NOT(pattern: iPattern): iPattern {
-	return data => (reporter, silent) => {
-		if (pattern(data)(reporter, true)) {
+	return data => reporter => {
+		if (pattern(data)(reporter.silence())) {
 			return reporter.complain(
-				`Expected (${reporter.getStack()}) to not match the given pattern`,
-				silent
+				`Expected (${reporter.getStack()}) to not match the given pattern`
 			)
 		}
 

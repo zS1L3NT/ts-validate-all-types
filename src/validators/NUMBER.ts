@@ -6,29 +6,19 @@ import { iPattern } from "../index"
  * @param numbers Numbers
  */
 export default function NUMBER(...numbers: number[]): iPattern {
-	return data => (reporter, silent) => {
-		if (numbers.length > 0) {
-			if (typeof data !== "number") {
-				return reporter.complain(
-					`Expected (${reporter.getStack()}) to be of type \`number\``,
-					silent
-				)
-			}
+	return data => reporter => {
+		if (typeof data !== "number") {
+			return reporter.complain(
+				`Expected (${reporter.getStack()}) to be of type \`number\``
+			)
+		}
 
+		if (numbers.length > 0) {
 			if (!numbers.includes(data)) {
 				return reporter.complain(
 					`Expected (${reporter.getStack()}) to be in (${JSON.stringify(
 						numbers
-					)})`,
-					silent
-				)
-			}
-		}
-		else {
-			if (typeof data !== "number") {
-				return reporter.complain(
-					`Expected (${reporter.getStack()}) to be of type \`number\``,
-					silent
+					)})`
 				)
 			}
 		}

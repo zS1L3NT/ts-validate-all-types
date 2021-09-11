@@ -34,9 +34,9 @@ const validate = (
 	pattern: iPattern,
 	name: string = "*"
 ): iValidationResult => {
-	const reporter = new Reporter([name], [])
+	const reporter = new Reporter([name], [], false)
 	const result = {
-		success: pattern(data)(reporter, false),
+		success: pattern(data)(reporter),
 		errors: reporter.reports
 	}
 
@@ -71,7 +71,7 @@ const validate_express = (
 /**
  * & Type for a pattern
  */
-type iPattern = (data: any) => (reporter: Reporter, silent: boolean) => boolean
+type iPattern = (data: any) => (reporter: Reporter) => boolean
 
 export {
 	validate,

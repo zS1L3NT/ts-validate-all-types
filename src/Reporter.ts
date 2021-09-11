@@ -1,10 +1,12 @@
 export default class Reporter {
 	private readonly stack: string[]
 	public reports: string[]
+	private readonly silent: boolean
 
-	public constructor(stack: string[], reports: string[]) {
+	public constructor(stack: string[], reports: string[], silent: boolean) {
 		this.stack = stack
 		this.reports = reports
+		this.silent = silent
 	}
 
 	public throw(message: string) {
@@ -18,8 +20,8 @@ export default class Reporter {
 		throw new Error(report)
 	}
 
-	public complain(message: string, silent: boolean): false {
-		if (silent) return false
+	public complain(message: string): false {
+		if (this.silent) return false
 		let report = ""
 		for (let i = 0, il = this.stack.length; i < il; i++) {
 			if (i === 0) report += `${this.stack[i]}`
@@ -31,8 +33,12 @@ export default class Reporter {
 		return false
 	}
 
+	public silence() {
+		return new Reporter(this.stack, this.reports, true)
+	}
+
 	public setStack(stack: string): Reporter {
-		return new Reporter([...this.stack, stack], this.reports)
+		return new Reporter([...this.stack, stack], this.reports, this.silent)
 	}
 
 	public getStack(): string {

@@ -8,11 +8,10 @@ import { iPattern } from "../index"
 export default function OBJECT(pattern_object?: {
 	[property: string]: iPattern
 }): iPattern {
-	return data => (reporter, silent) => {
+	return data => reporter => {
 		if (typeof data !== "object" || Array.isArray(data) || data === null) {
 			return reporter.complain(
-				`Expected (${data}) to be of type \`object\``,
-				silent
+				`Expected (${data}) to be of type \`object\``
 			)
 		}
 
@@ -21,40 +20,36 @@ export default function OBJECT(pattern_object?: {
 		const pattern_keys = Object.keys(pattern_object)
 		const data_keys = Object.keys(data)
 
+		let _return = true
 		for (const pattern_key of pattern_keys) {
-			const key_can_be_undefined = pattern_object[pattern_key]!(undefined)(
-				reporter.setStack(pattern_key),
-				true
-			)
+			const pattern_rejects_undefined = !pattern_object[pattern_key](undefined)(reporter.silence())
 
-			if (!data_keys.includes(pattern_key) && !key_can_be_undefined) {
-				return reporter.complain(
-					`Expected (${reporter.getStack()}) to contain property (${pattern_key})`,
-					silent
+			if (!data_keys.includes(pattern_key) && pattern_rejects_undefined) {
+				_return = reporter.complain(
+					`Expected (${reporter.getStack()}) to contain property (${pattern_key})`
 				)
 			}
 		}
 
 		for (const data_key of data_keys) {
 			const stacked_reporter = reporter.setStack(data_key)
-			const value = data[data_key]
 			const pattern = pattern_object[data_key]
+			const value = data[data_key]
 
 			if (!pattern) {
-				return stacked_reporter.complain(
-					`No type definitions for (${data_key})`,
-					silent
+				_return = stacked_reporter.complain(
+					`No type definitions for (${data_key})`
 				)
+				continue
 			}
 
-			if (!pattern(value)(stacked_reporter, silent)) {
-				return stacked_reporter.complain(
-					`Property (${data_key}) doesn't match the defined data type`,
-					silent
+			if (!pattern(value)(stacked_reporter.silence())) {
+				_return = stacked_reporter.complain(
+					`Property (${data_key}) doesn't match the defined data type`
 				)
 			}
 		}
 
-		return true
+		return _return
 	}
 }

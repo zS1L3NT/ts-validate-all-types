@@ -5,16 +5,18 @@ import { iPattern } from "../index"
  * @param patterns List of patterns to compare with
  */
 export default function AND(...patterns: iPattern[]): iPattern {
-	return data => (reporter, silent) => {
-		if (patterns.length === 0) {
-			reporter.throw(`Expected developer to provide at least 1 pattern for the AND operation`)
-			return false
+	return data => reporter => {
+		if (patterns.length < 1) {
+			reporter.throw(
+				`Expected developer to provide at least 1 pattern for the AND operation`
+			)
 		}
 
+		let _return = true
 		for (const pattern of patterns) {
-			if (!pattern(data)(reporter, silent)) return false
+			if (!pattern(data)(reporter)) _return = false
 		}
 
-		return true
+		return _return
 	}
 }

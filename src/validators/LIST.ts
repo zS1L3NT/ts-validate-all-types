@@ -6,35 +6,25 @@ import { iPattern, OR } from "../index"
  * @param patterns Pattern
  */
 export default function LIST(...patterns: iPattern[]): iPattern {
-	return data => (reporter, silent) => {
-		if (patterns.length === 0) {
-			if (!Array.isArray(data)) {
-				return reporter.complain(
-					`Expected (${reporter.getStack()}) to be of type \`array\``,
-					silent
-				)
-			}
-
-			return true
-		}
-
+	return data => reporter => {
 		if (!Array.isArray(data)) {
 			return reporter.complain(
-				`Expected (${reporter.getStack()}) to be of type \`array\``,
-				silent
+				`Expected (${reporter.getStack()}) to be of type \`array\``
 			)
 		}
 
+		if (patterns.length === 0) return true
+
+		let _return = true
 		for (const i in Array(data.length).fill(0)) {
 			const stacked_reporter = reporter.setStack(`[${i}]`)
-			if (!OR(...patterns)(data[i])(stacked_reporter, true)) {
-				return stacked_reporter.complain(
-					`Expected [${i}] to be of pattern defined`,
-					silent
+			if (!OR(...patterns)(data[i])(stacked_reporter.silence())) {
+				_return = stacked_reporter.complain(
+					`Expected [${i}] to be of pattern defined`
 				)
 			}
 		}
 
-		return true
+		return _return
 	}
 }

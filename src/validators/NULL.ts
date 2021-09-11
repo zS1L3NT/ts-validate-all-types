@@ -5,11 +5,10 @@ import { iPattern } from "../index"
  * Method name is in capitals because null is a keyword
  */
 export default function NULL(): iPattern {
-	return data => (reporter, silent) => {
+	return data => reporter => {
 		if (data !== null) {
 			return reporter.complain(
-				`Expected (${reporter.getStack()}) to be of type \`null\``,
-				silent
+				`Expected (${reporter.getStack()}) to be of type \`null\``
 			)
 		}
 
