@@ -33,11 +33,11 @@ The `validate` object we imported earlier is a function which can take 2 (3: opt
 Number | Type      | Description
 -------|-----------|------------------------------------------------------
 `1`    | `any`     | The object we are checking
-`2`    | `iPattern`| A specific pattern to compare the object to (more about this later)
+`2`    | `Validator`| A specific pattern to compare the object to (more about this later)
 `3`    | `string?` | The name of the root object when logs display errors. Defaults to `*` as root
 --------------------------------------------------------------------------
 
-The type `iPattern` is something you don't need to worry about.
+The type `Validator` is something you don't need to worry about.
 Just know that it is the Typescript type for a pattern.
 Patterns can look like `STRING()` or `NUMBER()`.
 
@@ -174,6 +174,7 @@ console.log(validate(undefined, NULL()))
 
 ### Validating undefined with `UNDEFINED()`
 Just like `NULL()`, `UNDEFINED()` doesn't allow variations of the parameters
+
 Type        | Description
 ------------|------------------------------------------------------
 (empty)     | validates if the input is a undefined
@@ -195,7 +196,7 @@ This one's a bit more complicated. `LIST()` allows a few sets of parameters:
 Type            | Description
 ----------------|------------------------------------------------------
 `(empty)`       | validates if the input is a list
-`...iPattern[]` | validates if the input is a list and checks if all items in the list match at least 1 of the Patterns stated
+`...Validator[]` | validates if the input is a list and checks if all items in the list match at least 1 of the Patterns stated
 <br>
 
 ```ts
@@ -240,9 +241,8 @@ console.log(validate(codes, LIST(NUMBER(34, 76, 92))))
 This way, we can make checking of list types much more detailed
 
 ### Validating an object with `OBJECT()`
-Last but not least, in fact most importantly, we can use `OBJECT()`
-to validate objects. `OBJECT()` only allows 1 optional parameter
-which maps out what the inner properties will look like
+We can use `OBJECT()` to validate objects.
+`OBJECT()` only allows 1 optional parameter which maps out what the inner properties will look like
 
 ```ts
 import { validate, OBJECT } from "validate-all-types"
@@ -300,17 +300,13 @@ console.log(validate(
 // We can even nest OBJECT() in OBJECT()
 ```
 
-## Validating with logical operators
-We can combine what we've learnt and move on to the next Chapter.
-We can use logical operators to string together more complex pattern types.
-
-### Validating the OR operation with `OR()`
+### Validating the or operation with `OR()`
 If you want either of a few patterns to match, use the `OR()` operator.
 This function takes multiple parameters:
 
 Type            | Description
 ----------------|-------------
-`...iPattern[]` | A list of patterns to test on the input
+`...Validator[]` | A list of patterns to test on the input
 <br>
 
 ```ts
@@ -334,59 +330,6 @@ console.log(validate(
 // >     success: false,
 // >     errors: [ '*: Expected (*) to match at least one of the given patterns' ]
 // > }
-```
-
-### Validating the AND operation with `AND()`
-If you need an object to be of multiple patterns at once, you can use the `AND()` operator.
-This operator works the same way as the `OR()` operator and takes a few parameters:
-
-Type            | Description
-----------------|------------------------------------------
-`...iPattern[]` | A list of patterns to test on the input
-<br>
-
-```ts
-import { validate, AND, STRING, BOOLEAN } from "validate-all-types"
-
-console.log(validate("string", AND()))
-// > Error: *: Expected developer to provide at least 1 pattern for the AND operation
-
-console.log(validate(
-	"string",
-	AND(
-		STRING(),
-		STRING("string"),
-		STRING(/^string$/)
-	)
-))
-// > { success: true, errors: [] }
-
-console.log(validate(
-	"string",
-	AND(STRING("string"), BOOLEAN())
-))
-// > { success: false, errors: [ '*: Expected (*) to be of type `BOOLEAN`' ] }
-```
-Developer side-note: You probably won't ever need to use this. This module was just included just in case someone needed it. Almost all the time, types don't cross over. You can't have a variable of type "string" AND "number" at once!!!
-
-### Validating the not operation with `NOT()`
-If you want the result of a pattern to be inverted,
-you can use the `NOT()` operator which takes only 1 parameter:
-
-Type       | Description
------------|-----------------------------------------
-`iPattern` | Pattern which boolean should be reversed
-
-This is applicable in cases where you don't want a variable to be of a certain type
-
-```ts
-import { validate, NOT, STRING, NUMBER } from "validate-all-types"
-
-console.log(validate("string", NOT(NUMBER())))
-// > { success: true, errors: [] }
-
-console.log(validate("string", NOT(STRING())))
-// > { success: false, errors: [ '*: Expected (*) to not match the given pattern' ] }
 ```
 
 ## Using `validate_express` with Express.js
@@ -416,7 +359,7 @@ The `validate_express` takes in 2 parameters:
 Number | Type                  | Description
 -------|-----------------------|-------------
 `1`    | `"body" \| "pattern"` | Can either verify the `req.body` or `req.params` object
-`2`    | `iPattern`            | Pattern to compare the object with
+`2`    | `Validator`            | Pattern to compare the object with
 
 Because of the middleware, in Typescript you can now safely use type assertions.
 Also, now for both Typescript and Javascript, you can safely use the variables like

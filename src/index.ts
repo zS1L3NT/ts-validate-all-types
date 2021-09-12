@@ -1,14 +1,13 @@
-import Reporter from "./Reporter"
-import STRING from "./validators/STRING"
-import NUMBER from "./validators/NUMBER"
-import BOOLEAN from "./validators/BOOLEAN"
-import LIST from "./validators/LIST"
-import OBJECT from "./validators/OBJECT"
-import NULL from "./validators/NULL"
-import UNDEFINED from "./validators/UNDEFINED"
-import OR from "./validators/OR"
-import AND from "./validators/AND"
-import NOT from "./validators/NOT"
+import Reporter from "./classes/Reporter"
+import STRING from "./functions/STRING"
+import NUMBER from "./functions/NUMBER"
+import BOOLEAN from "./functions/BOOLEAN"
+import LIST from "./functions/LIST"
+import OBJECT from "./functions/OBJECT"
+import NULL from "./functions/NULL"
+import UNDEFINED from "./functions/UNDEFINED"
+import OR from "./functions/OR"
+import Validator from "./classes/Validator"
 
 /**
  * Results on how the object pattern matching went
@@ -31,12 +30,12 @@ interface iValidationResult {
  */
 const validate = (
 	data: any,
-	pattern: iPattern,
+	pattern: Validator,
 	name: string = "*"
 ): iValidationResult => {
 	const reporter = new Reporter([name], [], false)
 	const result = {
-		success: pattern(data)(reporter),
+		success: pattern.validate(data, reporter),
 		errors: reporter.reports
 	}
 
@@ -59,7 +58,7 @@ const validate = (
  */
 const validate_express = (
 	item: "body" | "params",
-	pattern: iPattern
+	pattern: Validator
 ) => (req: any, res: any, next: Function) => {
 	const data = req[item]
 	const { success, errors } = validate(data, pattern, item)
@@ -67,11 +66,6 @@ const validate_express = (
 	if (success) next()
 	else res.status(400).send(errors)
 }
-
-/**
- * & Type for a pattern
- */
-type iPattern = (data: any) => (reporter: Reporter) => boolean
 
 export {
 	validate,
@@ -84,8 +78,5 @@ export {
 	NULL,
 	UNDEFINED,
 	OR,
-	AND,
-	NOT,
-	iPattern,
 	iValidationResult
 }

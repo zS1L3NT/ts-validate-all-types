@@ -1,6 +1,7 @@
-import { validate, STRING, NUMBER, BOOLEAN, LIST, OBJECT, NULL, UNDEFINED, AND, OR, NOT, iPattern } from "./index"
+import { validate, STRING, NUMBER, BOOLEAN, LIST, OBJECT, NULL, UNDEFINED, OR } from "./index"
+import Validator from "./classes/Validator"
 
-const assert = (data: any, pattern: iPattern, correct: boolean, errors: number = 0) => {
+const assert = (data: any, pattern: Validator, correct: boolean, errors: number = 0) => {
 	const result = validate(data, pattern)
 	if (result.success === correct) {
 		if (result.errors.length === errors) {
@@ -87,24 +88,9 @@ assert([], UNDEFINED(), false, 1)
 console.log("Validators: undefined ✅")
 // endregion
 
-// region and
-assert(0, AND(NOT(NULL()), NOT(UNDEFINED())), true)
-assert(null, AND(NULL(), NOT(OBJECT()), NOT(STRING())), true)
-assert(null, AND(NOT(NULL())), false, 1)
-assert({}, AND(NOT(NULL()), OBJECT()), true)
-console.log("Validators: AND       ✅")
-// endregion
-
 // region or
 assert(0, OR(STRING(), NUMBER()), true)
 assert(0, OR(NULL(), UNDEFINED()), false, 1)
 assert(0, OR(STRING("hi", "bye"), NUMBER(1, 2)), false, 1)
-assert(null, OR(NOT(NULL()), UNDEFINED()), false, 1)
 console.log("Validators: or        ✅")
-// endregion
-
-// region not
-assert(0, NOT(NULL()), true)
-assert(null, NOT(NOT(NOT(NOT(NULL())))), true)
-console.log("Validators: not       ✅")
 // endregion
