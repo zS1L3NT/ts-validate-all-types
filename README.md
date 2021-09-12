@@ -8,6 +8,7 @@ This package is a type validator mainly for Typescript (also works with Javascri
 Ever faced those issues where you're trying to make sure a type `any` is an instance of an interface? This is the issue this package was designed to solve.
 With this package, you can safely assert the type for an object and return customised errors if the types are incorrect
 
+
 ## Installation & Usage
 > $ npm install validate-all-types
 
@@ -30,11 +31,11 @@ Typescript typings are automatically included so there's no need to install anyt
 The `validate` object we imported earlier is a function which can take 2 (3: optional) parameters.
 
 ### `validate` parameters:
-Number | Type      | Description
--------|-----------|------------------------------------------------------
-`1`    | `any`     | The object we are checking
+Number | Type       | Description
+-------|------------|------------------------------------------------------
+`1`    | `any`      | The object we are checking
 `2`    | `Validator`| A specific pattern to compare the object to (more about this later)
-`3`    | `string?` | The name of the root object when logs display errors. Defaults to `*` as root
+`3`    | `string?`  | The name of the root object when logs display errors. Defaults to `*` as root
 --------------------------------------------------------------------------
 
 The type `Validator` is something you don't need to worry about.
@@ -59,7 +60,7 @@ console.log(validate("string", STRING()))
 // > { success: true, errors: [] }
 
 console.log(validate(0, STRING()))
-// > { success: false, errors: [ '*: Expected (*) to be of type `string`' ] }
+// > { success: false, errors: [ '*: Expected value to be of type: string' ] }
 ```
 
 Notice that in the error message, the root element is called `*`
@@ -83,7 +84,7 @@ console.log(validate("string", STRING()))
 // This returned true because "string" is a string
 
 console.log(validate(0, STRING()))
-// > { success: false, errors: [ '*: Expected (*) to be of type `string`' ] }
+// > { success: false, errors: [ '*: Expected value to be of type: string' ] }
 // This returned false because 0 is not a string
 
 console.log(validate("string", STRING(/^string$/)))
@@ -91,7 +92,7 @@ console.log(validate("string", STRING(/^string$/)))
 // This returned true because "string" matches the RegExp /^string$/
 
 console.log(validate("string", STRING(/^something-else$/)))
-// > { success: false, errors: [ '*: Expected (*) to match RegExp (/^something-else$/)' ] }
+// > { success: false, errors: [ '*: Expected value to match RegExp: /^something-else$/' ] }
 // This returned false because "string" didn't match the RegExp /^something-else$/
 
 console.log(validate("string", STRING("does", "the", "string", "match", "?")))
@@ -99,9 +100,9 @@ console.log(validate("string", STRING("does", "the", "string", "match", "?")))
 // This returned true because "string" was passed into STRING() as a parameter
 
 console.log(validate("string", STRING("doesn't", "match"), "my-string"))
-// > { success: false, errors: [ `my-string: Expected (my-string) to be in (["doesn't","match"])` ] }
+// > { success: false, errors: [ `my-string: Expected value to be one of the strings: ["doesn't","match"]` ] }
 // This returns false because "string" wasn't passed into STRING() as a parameter
-// Since I passed a third parameter to the validate function, the root got renamed
+// Since I passed a third parameter to the validate function, the root got renamed from * to my-string
 ```
 
 ### Validating a number with `NUMBER()`
@@ -120,13 +121,13 @@ console.log(validate(3, NUMBER()))
 // > { success: true, errors: [] }
 
 console.log(validate("string", NUMBER()))
-// > { success: false, errors: [ '*: Expected (*) to be of type `number`' ] }
+// > { success: false, errors: [ '*: Expected value to be of type: number' ] }
 
 console.log(validate(3, NUMBER(1, 2, 3, 4, 5)))
 // > { success: true, errors: [] }
 
 console.log(validate(3, NUMBER(6, 7, 8, 9, 10)))
-// > { success: false, errors: [ '*: Expected (*) to be in ([6,7,8,9,10])' ] }
+// > { success: false, errors: [ '*: Expected value to be one of the numbers: [6,7,8,9,10]' ] }
 ```
 
 ### Validating a boolean with `BOOLEAN()`
@@ -145,13 +146,13 @@ console.log(validate(true, BOOLEAN()))
 // > { success: true, errors: [] }
 
 console.log(validate("string", BOOLEAN()))
-// > { success: false, errors: [ '*: Expected (*) to be of type `boolean`' ] }
+// > { success: false, errors: [ '*: Expected value to be of type: boolean' ] }
 
 console.log(validate(true, BOOLEAN(true)))
 // > { success: true, errors: [] }
 
 console.log(validate(false, BOOLEAN(true)))
-// > { success: false, errors: [ '*: Expected (*) to be `true`' ] }
+// > { success: false, errors: [ '*: Expected value to be: true' ] }
 ```
 
 ### Validating null with `NULL()`
@@ -169,7 +170,7 @@ console.log(validate(null, NULL()))
 // > { success: true, errors: [] }
 
 console.log(validate(undefined, NULL()))
-// > { success: false, errors: [ '*: Expected (*) to be of type `null`' ] }
+// > { success: false, errors: [ '*: Expected value to be: null' ] }
 ```
 
 ### Validating undefined with `UNDEFINED()`
@@ -187,15 +188,15 @@ console.log(validate(undefined, UNDEFINED()))
 // > { success: true, errors: [] }
 
 console.log(validate(null, UNDEFINED()))
-// > { success: false, errors: [ '*: Expected (*) to be of type `undefined`' ] }
+// > { success: false, errors: [ '*: Expected value to be: undefined' ] }
 ```
 
 ### Validating a list with `LIST()`
 This one's a bit more complicated. `LIST()` allows a few sets of parameters:
 
-Type            | Description
-----------------|------------------------------------------------------
-`(empty)`       | validates if the input is a list
+Type             | Description
+-----------------|------------------------------------------------------
+`(empty)`        | validates if the input is a list
 `...Validator[]` | validates if the input is a list and checks if all items in the list match at least 1 of the Patterns stated
 <br>
 
@@ -206,28 +207,28 @@ console.log(validate([1, 2, 3, 4, 5], LIST()))
 // > { success: true, errors: [] }
 
 console.log(validate({ property: "value" }, LIST()))
-// > { success: false, errors: [ '*: Expected (*) to be of type `array`' ] }
+// > { success: false, errors: [ '*: Expected value to be of type: array' ] }
 
 console.log(validate(["one", "two", "three"], LIST(STRING())))
 // > { success: true, errors: [] }
 
 console.log(validate([1, "two", 3], LIST(NUMBER())))
-// > { success: false, errors: [ '* > [1]: Expected [1] to be of pattern defined' ] }
+// > { success: false, errors: [ '* > [1]: Expected value to be of type: number' ] }
 
 console.log(validate([1, "two", []], LIST(STRING(), NUMBER(), LIST())))
 // > { success: true, errors: [] }
 // And yes we also can verify LIST() within LIST()
 
 console.log(validate([1, "two", null], LIST(STRING(), NUMBER())))
-// > { success: false, errors: [ '* > [2]: Expected [2] to be of pattern defined' ] }
+// > { success: false, errors: [ '* > [2]: Expected value to be of type: string | number' ] }
 
 const usernames = ["jack", "_jack", "-jack"]
 console.log(validate(usernames, LIST(STRING(/^[a-zA-Z]/)))) 
 // > {
 // >     success: false,
 // >     errors: [
-// >         '* > [1]: Expected [1] to be of pattern defined',
-// >         '* > [2]: Expected [2] to be of pattern defined'
+// >         '* > [1]: Expected value to be of type: /^[a-zA-Z]/',
+// >         '* > [2]: Expected value to be of type: /^[a-zA-Z]/''
 // >     ]
 // > }
 // Not every username matched /^[a-zA-Z]/
@@ -241,8 +242,9 @@ console.log(validate(codes, LIST(NUMBER(34, 76, 92))))
 This way, we can make checking of list types much more detailed
 
 ### Validating an object with `OBJECT()`
+
 We can use `OBJECT()` to validate objects.
-`OBJECT()` only allows 1 optional parameter which maps out what the inner properties will look like
+`OBJECT()` only allows 1 optional parameter which maps out what the properties will look like
 
 ```ts
 import { validate, OBJECT } from "validate-all-types"
@@ -254,47 +256,47 @@ console.log(validate({ property: "value" }, OBJECT()))
 console.log(validate({ property: "value" }, OBJECT({})))
 // > {
 // >     success: false,
-// >     errors: [ '* > name: No type definitions for (property)' ]
+// >     errors: [ '* > name: Value has unknown property: property' ]
 // > }
 // The pattern of {} means the object must have no properties
 
 console.log(validate(
-	{ property: "value" },
-	OBJECT({ property: STRING() }
+    { property: "value" },
+    OBJECT({ property: STRING() }
 )))
 // > { success: true, errors: [] }
 // We set the OBJECT's params to an object with a property "property" and a value "value"
 // Since "value" matches STRING(), validate() returned true
 
 console.log(validate({
-		property: "value"
-	}, OBJECT({
-		prop: STRING()
-	})
+        property: "value"
+    }, OBJECT({
+        prop: STRING()
+    })
 ))
 // > {
 // >     success: false,
 // >     errors: [
-// >         '*: Expected (*) to contain property (prop)',
-// >         '* > property: No type definitions for (property)'
+// >         '*: Expected value to contain property: prop',
+// >         '*: Value has unknown property: property'
 // >     ]
 // > }
 // Since there is no property for the type validation "prop", we got an error
 // Since there is no type validation for the property "property", we got an error
 
 console.log(validate(
-	{
-		property: "value",
-		layer: {
-			deepProperty: ["", 0, null, undefined, false]
-		}
-	},
-	OBJECT({
-		property: STRING(),
-		layer: OBJECT({
-			deepProperty: LIST(STRING(), NUMBER(0), NULL(), UNDEFINED(), BOOLEAN(false))
-		})
-	})
+    {
+        property: "value",
+        layer: {
+            deepProperty: ["", 0, null, undefined, false]
+        }
+    },
+    OBJECT({
+        property: STRING(),
+        layer: OBJECT({
+            deepProperty: LIST(STRING(), NUMBER(0), NULL(), UNDEFINED(), BOOLEAN(false))
+        })
+    })
 ))
 // > { success: true, errors: [] }
 // We can even nest OBJECT() in OBJECT()
@@ -304,8 +306,8 @@ console.log(validate(
 If you want either of a few patterns to match, use the `OR()` operator.
 This function takes multiple parameters:
 
-Type            | Description
-----------------|-------------
+Type             | Description
+-----------------|-------------
 `...Validator[]` | A list of patterns to test on the input
 <br>
 
@@ -317,24 +319,59 @@ console.log(validate("string", OR()))
 // An OR operation only works with at least one input
 
 console.log(validate(
-	"string",
-	OR(STRING(), NUMBER())
+    "string",
+    OR(STRING(), NUMBER())
 ))
 // > { success: true, errors: [] }
 
 console.log(validate(
-	"string",
-	OR(BOOLEAN(), NUMBER())
+    "string",
+    OR(BOOLEAN(), NUMBER())
 ))
 // > {
 // >     success: false,
-// >     errors: [ '*: Expected (*) to match at least one of the given patterns' ]
+// >     errors: [ '*: Expected value to match at least one of the given patterns: boolean | number' ]
 // > }
 ```
 
+## Custom error messages
+
+You may not like the default error messages we provide you when a patter matching fails. Because of this, there is a
+function to set up your own custom error messages to your own liking.
+
+Error messages can be very specific to which exact value was validated wrongly. Because of this, this package takes the
+default error template and replaces specified parts of the message with custom values. Here's what I mean:
+
+```ts
+import { NUMBER, setup_validate_messages, validate } from "validate-all-types"
+
+// Call this function this way to set up the new error messages
+setup_validate_messages({
+    not_type: `Bad type, expected %type%`
+})
+
+console.log(validate("string", NUMBER()))
+// > { success: false, errors: [`Bad type, expected number`] } 
+```
+
+In the example above, `%type%` was replaced with `number` because the expected type was `number`. Below is the table of
+all the possible error messages you could change
+
+Key                  | Changeable value | Default                                                                    | Description
+---------------------|------------------|----------------------------------------------------------------------------|------------
+`not_type`           | `%type%`         | `"Expected value to be of type: %type%"`                                   | Used when a type is not as defined
+`not_value`          | `%value%`        | `"Expected value to be: %value%"`                                          | Used when a value is not as defined
+`not_regex_match`    | `%regex%`        | `"Expected value to match RegExp: %regex%"`                                | Used when a string doesn't match the regex defined
+`not_among_strings`  | `%strings%`      | `"Expected value to be one of the strings: %strings%"`                     | Used when a string is not among the list of strings defined
+`not_among_numbers`  | `%numbers%`      | `"Expected value to be one of the numbers: %numbers%"`                     | Used when a number is not among the list of numbers defined
+`not_among_patterns` | `%patterns%`     | `"Expected value to match at least one of the given patterns: %patterns%"` | Used when a pattern is not among the list of patterns defined
+`missing_property`   | `%property%`     | `"Expected value to contain property: %property%"`                         | Used when an object is missing a property defined
+`unknown_property`   | `%property%`     | `"Value has unknown property: %property%"`                                 | Used when an object has an property not defined
+
 ## Using `validate_express` with Express.js
-You can also import the module as a middleware to be used with express.
-This way, you can verify the types of the `req.body` or `req.params`
+
+You can also import the module as a middleware to be used with express. This way, you can verify the types of
+the `req.body` or `req.params`
 before invalid types mess your code up
 
 ```ts
@@ -343,12 +380,12 @@ import { validate_express, OBJECT, STRING } from "validate-all-types"
 // ----snip----
 
 app.post("/body",
-	validate_express("body", OBJECT({ usnm: STRING(), pswd: STRING() })),
-	(req, res) => {
-		const { usnm, pswd } = req.body as { usnm: string, pswd: string }
-		console.log(`Username: ${usnm}`, `Password: ${pswd}`)
-		res.end()
-	}
+    validate_express("body", OBJECT({ usnm: STRING(), pswd: STRING() })),
+    (req, res) => {
+        const { usnm, pswd } = req.body as { usnm: string, pswd: string }
+        console.log(`Username: ${usnm}`, `Password: ${pswd}`)
+        res.end()
+    }
 )
 
 // ----snip----
@@ -359,7 +396,7 @@ The `validate_express` takes in 2 parameters:
 Number | Type                  | Description
 -------|-----------------------|-------------
 `1`    | `"body" \| "pattern"` | Can either verify the `req.body` or `req.params` object
-`2`    | `Validator`            | Pattern to compare the object with
+`2`    | `Validator`           | Pattern to compare the object with
 
 Because of the middleware, in Typescript you can now safely use type assertions.
 Also, now for both Typescript and Javascript, you can safely use the variables like

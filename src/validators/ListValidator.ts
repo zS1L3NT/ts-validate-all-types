@@ -19,7 +19,9 @@ export default class ListValidator extends Validator {
 	public validate(data: any, reporter: Reporter): boolean {
 		if (!Array.isArray(data)) {
 			return reporter.complain(
-				`Expected (${reporter.getStack()}) to be of type \`array\``
+				this.replaceText(Validator.not_type, {
+					type: `array`
+				})
 			)
 		}
 
@@ -28,9 +30,13 @@ export default class ListValidator extends Validator {
 		let _return = true
 		for (const i in Array(data.length).fill(0)) {
 			const stacked_reporter = reporter.setStack(`[${i}]`)
-			if (!OR(...this.validators).validate(data[i], stacked_reporter.silence())) {
+			const validator = OR(...this.validators)
+
+			if (!validator.validate(data[i], stacked_reporter.silence())) {
 				_return = stacked_reporter.complain(
-					`Expected [${i}] to be of pattern defined`
+					this.replaceText(Validator.not_type, {
+						type: validator.formatSchema()
+					})
 				)
 			}
 		}

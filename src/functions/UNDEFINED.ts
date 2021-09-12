@@ -1,4 +1,4 @@
-import UndefinedValidator from "../validators/UndefiendValidator"
+import UndefinedValidator from "../validators/UndefinedValidator"
 import Validator from "../classes/Validator"
 
 /**

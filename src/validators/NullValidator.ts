@@ -12,7 +12,9 @@ export default class NullValidator extends Validator {
 	public validate(data: any, reporter: Reporter): boolean {
 		if (data !== null) {
 			return reporter.complain(
-				`Expected (${reporter.getStack()}) to be of type \`null\``
+				this.replaceText(Validator.not_value, {
+					type: `null`
+				})
 			)
 		}
 

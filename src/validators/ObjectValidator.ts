@@ -2,6 +2,8 @@ import Validator from "../classes/Validator"
 import Reporter from "../classes/Reporter"
 
 export default class ObjectValidator extends Validator {
+	public static missing_property = `Expected value to contain property: %property%`
+	public static unknown_property = `Value has unknown property: %property%`
 	private readonly pattern_object?: { [property: string]: Validator }
 
 	public constructor(pattern_object?: { [property: string]: Validator }) {
@@ -31,7 +33,9 @@ export default class ObjectValidator extends Validator {
 	public validate(data: any, reporter: Reporter): boolean {
 		if (typeof data !== "object" || Array.isArray(data) || data === null) {
 			return reporter.complain(
-				`Expected (${data}) to be of type \`object\``
+				this.replaceText(Validator.not_type, {
+					type: `object`
+				})
 			)
 		}
 
@@ -43,7 +47,9 @@ export default class ObjectValidator extends Validator {
 
 			if (!Object.keys(data).includes(pattern_key) && pattern_rejects_undefined) {
 				_return = reporter.complain(
-					`Expected (${reporter.getStack()}) to contain property (${pattern_key})`
+					this.replaceText(ObjectValidator.missing_property, {
+						property: pattern_key
+					})
 				)
 			}
 		}
@@ -53,15 +59,19 @@ export default class ObjectValidator extends Validator {
 			const pattern = this.pattern_object[data_key]
 
 			if (!pattern) {
-				_return = stacked_reporter.complain(
-					`No type definitions for (${data_key})`
+				_return = reporter.complain(
+					this.replaceText(ObjectValidator.unknown_property, {
+						property: data_key
+					})
 				)
 				continue
 			}
 
 			if (!pattern.validate(data_value, stacked_reporter.silence())) {
 				_return = stacked_reporter.complain(
-					`Property (${data_key}) doesn't match the defined data type`
+					this.replaceText(Validator.not_type, {
+						type: data_key
+					})
 				)
 			}
 		}

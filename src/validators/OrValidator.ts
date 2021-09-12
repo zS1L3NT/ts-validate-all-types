@@ -2,6 +2,7 @@ import Validator from "../classes/Validator"
 import Reporter from "../classes/Reporter"
 
 export default class OrValidator extends Validator {
+	public static not_among_patterns = `Expected value to match at least one of the given patterns: %patterns%`
 	private readonly validators: Validator[]
 
 	public constructor(validators: Validator[]) {
@@ -10,7 +11,6 @@ export default class OrValidator extends Validator {
 		this.validators = validators
 		this.schema = validators.map(validator => validator.schema).join(" | ")
 	}
-
 
 	public validate(data: any, reporter: Reporter): boolean {
 		if (this.validators.length < 1) {
@@ -24,7 +24,9 @@ export default class OrValidator extends Validator {
 		}
 
 		return reporter.complain(
-			`Expected (${reporter.getStack()}) to match at least one of the given patterns`
+			this.replaceText(OrValidator.not_among_patterns, {
+				patterns: this.validators.map(validator => validator.formatSchema()).join(" | ")
+			})
 		)
 	}
 

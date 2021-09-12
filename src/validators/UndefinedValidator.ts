@@ -9,11 +9,12 @@ export default class UndefinedValidator extends Validator {
 		this.schema = `undefined`
 	}
 
-
 	public validate(data: any, reporter: Reporter): boolean {
 		if (data !== undefined) {
 			return reporter.complain(
-				`Expected (${reporter.getStack()}) to be of type \`undefined\``
+				this.replaceText(Validator.not_value, {
+					type: `undefined`
+				})
 			)
 		}
 
