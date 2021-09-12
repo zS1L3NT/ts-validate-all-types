@@ -1,15 +1,17 @@
 import { BOOLEAN, LIST, NULL, NUMBER, OBJECT, OR, STRING, UNDEFINED, validate } from "./index"
 import Validator from "./classes/Validator"
 
-const assert = (data: any, pattern: Validator, correct: boolean, errors: number = 0) => {
-	const result = validate(data, pattern)
+const assert = (data: any, rule: Validator, correct: boolean, errors: number = 0) => {
+	const result = validate(data, rule)
 	if (result.success === correct) {
 		if (result.errors.length === errors) {
 			// Correct
-		} else {
+		}
+		else {
 			throw new Error(`Expected ${errors} errors, got ${result.errors.length} errors`)
 		}
-	} else {
+	}
+	else {
 		throw new Error(result.errors.toString())
 	}
 }

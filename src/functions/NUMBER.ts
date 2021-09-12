@@ -2,7 +2,7 @@ import NumberValidator from "../validators/NumberValidator"
 import Validator from "../classes/Validator"
 
 /**
- * Checks if next parameter is exactly the same as one of the passed patterns here
+ * Checks if next parameter is exactly the same as one of the passed rules here
  * If no parameter passed, checks if next parameter is of type 'number'
  * @param numbers Numbers
  */

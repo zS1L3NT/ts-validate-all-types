@@ -14,9 +14,9 @@ import ObjectValidator from "./validators/ObjectValidator"
 import OrValidator from "./validators/OrValidator"
 
 /**
- * Results on how the object pattern matching went
+ * Results on how the object rule matching went
  *
- * @param success Whether the data matched the pattern defined
+ * @param success Whether the data matched the rule defined
  * @param errors List of corrections in the data to make
  */
 interface iValidationResult {
@@ -27,19 +27,19 @@ interface iValidationResult {
 /**
  * Function to check the type of an expression
  * @param data The object we are checking
- * @param pattern A specific pattern to compare the object to (more about this later)
+ * @param rule A specific rule to compare the object to (more about this later)
  * @param name The name of the root object when logs display errors. Defaults to `*` as root
  *
- * @return object The result of whether the object matched the pattern
+ * @return object The result of whether the object matched the rule
  */
 const validate = (
 	data: any,
-	pattern: Validator,
+	rule: Validator,
 	name: string = "*"
 ): iValidationResult => {
 	const reporter = new Reporter([name], [], false)
 	const result = {
-		success: pattern.validate(data, reporter),
+		success: rule.validate(data, reporter),
 		errors: reporter.reports
 	}
 
@@ -58,14 +58,14 @@ const validate = (
  * This way, you can catch errors before they affect your express callback
  *
  * @param item Can either verify the `req.body` or `req.params` object
- * @param pattern Pattern to compare the object with
+ * @param rule Rule to compare the object with
  */
 const validate_express = (
 	item: "body" | "params",
-	pattern: Validator
+	rule: Validator
 ) => (req: any, res: any, next: Function) => {
 	const data = req[item]
-	const { success, errors } = validate(data, pattern, item)
+	const { success, errors } = validate(data, rule, item)
 
 	if (success) next()
 	else res.status(400).send(errors)
@@ -79,7 +79,7 @@ const validate_express = (
  * @param not_regex_match Replaces `%regex%` with the allowed regex
  * @param not_among_strings Replaces `%strings%` with the allowed strings
  * @param not_among_numbers Replaces `%numbers%` with the allowed numbers
- * @param not_among_patterns Replaces `%patterns%` with the allowed patterns
+ * @param not_among_rules Replaces `%rules%` with the allowed rules
  * @param missing_property Replaces `%property%` with the missing property
  * @param unknown_property Replaces `%property%` with the unknown property
  */
@@ -89,16 +89,16 @@ interface iSetupValidateMessages {
 	not_regex_match?: string
 	not_among_strings?: string
 	not_among_numbers?: string
-	not_among_patterns?: string
+	not_among_rules?: string
 	missing_property?: string
 	unknown_property?: string
 }
 
 /**
  * Setup your own custom validation error messages. Each property in the object
- * defines the string returned when a pattern is not matched. Each of these strings
+ * defines the string returned when a rule is not matched. Each of these strings
  * can contain dynamic values like `%property%` or `%type%` that will be replaced
- * when a pattern matching fails.
+ * when a rule matching fails.
  *
  * All possible dynamic values are documented in the package's README.md file
  * and in the Typescript interface `iSetupValidateMessages`
@@ -121,7 +121,7 @@ const setup_validate_messages = ({
 									 not_regex_match,
 									 not_among_strings,
 									 not_among_numbers,
-									 not_among_patterns,
+									 not_among_rules,
 									 missing_property,
 									 unknown_property
 								 }: iSetupValidateMessages) => {
@@ -130,7 +130,7 @@ const setup_validate_messages = ({
 	if (not_regex_match) StringValidator.not_regex_match = not_regex_match
 	if (not_among_strings) StringValidator.not_among_strings = not_among_strings
 	if (not_among_numbers) NumberValidator.not_among_numbers = not_among_numbers
-	if (not_among_patterns) OrValidator.not_among_patterns = not_among_patterns
+	if (not_among_rules) OrValidator.not_among_rules = not_among_rules
 	if (missing_property) ObjectValidator.missing_property = missing_property
 	if (unknown_property) ObjectValidator.unknown_property = unknown_property
 }

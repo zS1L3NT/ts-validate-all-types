@@ -34,27 +34,29 @@ The `validate` object we imported earlier is a function which can take 2 (3: opt
 Number | Type       | Description
 -------|------------|------------------------------------------------------
 `1`    | `any`      | The object we are checking
-`2`    | `Validator`| A specific pattern to compare the object to (more about this later)
+`2`    | `Validator`| A specific rule to compare the object to (more about this later)
 `3`    | `string?`  | The name of the root object when logs display errors. Defaults to `*` as root
 --------------------------------------------------------------------------
 
-The type `Validator` is something you don't need to worry about.
-Just know that it is the Typescript type for a pattern.
-Patterns can look like `STRING()` or `NUMBER()`.
+The type `Validator` is something you don't need to worry about. Just know that it is the Typescript type for a rule.
+Rules can look like `STRING()` or `NUMBER()`.
 
 ### `validate` returns an object containing:
+
 Property | Type       | Description
 ---------|------------|---------------------------------------------------------
 success  | `boolean`  | Whether the validation of the object was a success or failure. `true` if success, `false` if failure
 errors   | `string[]` | The list of corrections to make if any
 
+## Making a rule
 
-## Making a pattern
-There are infinite combinations of patterns we can make.
-The complexity of the pattern only depends on how much code you are willing to write.
+There are infinite combinations of rules we can make. The complexity of the rule only depends on how much code you are
+willing to write.
 
 ### Validation basics with a string
+
 Here is how to validate a string
+
 ```ts
 console.log(validate("string", STRING()))
 // > { success: true, errors: [] }
@@ -197,7 +199,7 @@ This one's a bit more complicated. `LIST()` allows a few sets of parameters:
 Type             | Description
 -----------------|------------------------------------------------------
 `(empty)`        | validates if the input is a list
-`...Validator[]` | validates if the input is a list and checks if all items in the list match at least 1 of the Patterns stated
+`...Validator[]` | validates if the input is a list and checks if all items in the list match at least 1 of the Rules stated
 <br>
 
 ```ts
@@ -258,7 +260,7 @@ console.log(validate({ property: "value" }, OBJECT({})))
 // >     success: false,
 // >     errors: [ '* > name: Value has unknown property: property' ]
 // > }
-// The pattern of {} means the object must have no properties
+// The rule of {} means the object must have no properties
 
 console.log(validate(
     { property: "value" },
@@ -303,19 +305,19 @@ console.log(validate(
 ```
 
 ### Validating the or operation with `OR()`
-If you want either of a few patterns to match, use the `OR()` operator.
-This function takes multiple parameters:
+
+If you want either of a few rules to match, use the `OR()` operator. This function takes multiple parameters:
 
 Type             | Description
 -----------------|-------------
-`...Validator[]` | A list of patterns to test on the input
+`...Validator[]` | A list of rules to test on the input
 <br>
 
 ```ts
 import { validate, OR, STRING, NUMBER, BOOLEAN } from "validate-all-types"
 
 console.log(validate("string", OR()))
-// > Error: *: Expected developer to provide at least 1 pattern for the OR operation
+// > Error: *: Expected developer to provide at least 1 rule for the OR operation
 // An OR operation only works with at least one input
 
 console.log(validate(
@@ -330,9 +332,10 @@ console.log(validate(
 ))
 // > {
 // >     success: false,
-// >     errors: [ '*: Expected value to match at least one of the given patterns: boolean | number' ]
+// >     errors: [ '*: Expected value to match at least one of the given rules: boolean | number' ]
 // > }
 ```
+
 
 ## Custom error messages
 
@@ -357,16 +360,16 @@ console.log(validate("string", NUMBER()))
 In the example above, `%type%` was replaced with `number` because the expected type was `number`. Below is the table of
 all the possible error messages you could change
 
-Key                  | Changeable value | Default                                                                    | Description
----------------------|------------------|----------------------------------------------------------------------------|------------
-`not_type`           | `%type%`         | `"Expected value to be of type: %type%"`                                   | Used when a type is not as defined
-`not_value`          | `%value%`        | `"Expected value to be: %value%"`                                          | Used when a value is not as defined
-`not_regex_match`    | `%regex%`        | `"Expected value to match RegExp: %regex%"`                                | Used when a string doesn't match the regex defined
-`not_among_strings`  | `%strings%`      | `"Expected value to be one of the strings: %strings%"`                     | Used when a string is not among the list of strings defined
-`not_among_numbers`  | `%numbers%`      | `"Expected value to be one of the numbers: %numbers%"`                     | Used when a number is not among the list of numbers defined
-`not_among_patterns` | `%patterns%`     | `"Expected value to match at least one of the given patterns: %patterns%"` | Used when a pattern is not among the list of patterns defined
-`missing_property`   | `%property%`     | `"Expected value to contain property: %property%"`                         | Used when an object is missing a property defined
-`unknown_property`   | `%property%`     | `"Value has unknown property: %property%"`                                 | Used when an object has an property not defined
+Key                  | Changeable value | Default                                                              | Description
+---------------------|------------------|----------------------------------------------------------------------|------------
+`not_type`           | `%type%`         | `"Expected value to be of type: %type%"`                             | Used when a type is not as defined
+`not_value`          | `%value%`        | `"Expected value to be: %value%"`                                    | Used when a value is not as defined
+`not_regex_match`    | `%regex%`        | `"Expected value to match RegExp: %regex%"`                          | Used when a string doesn't match the regex defined
+`not_among_strings`  | `%strings%`      | `"Expected value to be one of the strings: %strings%"`               | Used when a string is not among the list of strings defined
+`not_among_numbers`  | `%numbers%`      | `"Expected value to be one of the numbers: %numbers%"`               | Used when a number is not among the list of numbers defined
+`not_among_rules`    | `%rules%`        | `"Expected value to match at least one of the given rules: %rules%"` | Used when a value doesn't match any rule the list of rules defined
+`missing_property`   | `%property%`     | `"Expected value to contain property: %property%"`                   | Used when an object is missing a property defined
+`unknown_property`   | `%property%`     | `"Value has unknown property: %property%"`                           | Used when an object has an property not defined
 
 ## Using `validate_express` with Express.js
 
@@ -393,10 +396,10 @@ app.post("/body",
 
 The `validate_express` takes in 2 parameters:
 
-Number | Type                  | Description
--------|-----------------------|-------------
-`1`    | `"body" \| "pattern"` | Can either verify the `req.body` or `req.params` object
-`2`    | `Validator`           | Pattern to compare the object with
+Number | Type               | Description
+-------|--------------------|-------------
+`1`    | `"body" \| "rule"` | Can either verify the `req.body` or `req.params` object
+`2`    | `Validator`        | Rule to compare the object with
 
 Because of the middleware, in Typescript you can now safely use type assertions.
 Also, now for both Typescript and Javascript, you can safely use the variables like

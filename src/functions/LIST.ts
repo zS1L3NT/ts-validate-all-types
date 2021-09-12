@@ -2,10 +2,10 @@ import ListValidator from "../validators/ListValidator"
 import Validator from "../classes/Validator"
 
 /**
- * Checks if next parameter is exactly the same as one of the passed patterns here
+ * Checks if next parameter is exactly the same as one of the passed rules here
  * If no parameter passed, checks if next parameter is of type 'list'
- * @param patterns Patterns
+ * @param rules Rules
  */
-export default function LIST(...patterns: Validator[]): ListValidator {
-	return new ListValidator(patterns)
+export default function LIST(...rules: Validator[]): ListValidator {
+	return new ListValidator(rules)
 }
