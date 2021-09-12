@@ -1,14 +1,14 @@
 {
-	"name": "validate-all-types",
-	"version": "1.6.1",
-	"description": "Validator for all interfaces",
+	"name": "validate-any",
+	"version": "1.0.1",
+	"description": "Data Validator",
 	"main": "build/index.js",
 	"types": "build/index.d.ts",
 	"author": "zS1L3NT <zechariahtan144@gmail.com> (http://www.zectan.com)",
 	"license": "ISC",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/zS1L3NT/ts-validate-all-types"
+		"url": "https://github.com/zS1L3NT/ts-validate-any"
 	},
 	"dependencies": {
 		"js-beautify": "^1.14.0"
@@ -21,5 +21,11 @@
 		"@types/node": "^16.9.1",
 		"ts-node": "^9.1.1",
 		"typescript": "^4.1.5"
-	}
+	},
+	"keywords": [
+		"validate",
+		"type",
+		"data",
+		"rules"
+	]
 }

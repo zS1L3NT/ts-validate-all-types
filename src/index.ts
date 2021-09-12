@@ -44,7 +44,7 @@ const validate = (
 	}
 
 	if (result.success === result.errors.length > 0) {
-		console.warn("Error with typechecking. Create an issue on https://github.com/zS1L3NT/ts-validate-all-types with the PATTERN AND the data below", {
+		console.warn("Error with typechecking. Create an issue on https://github.com/zS1L3NT/ts-validate-any with the PATTERN AND the data below", {
 			data,
 			errors: result.errors
 		})
@@ -104,7 +104,7 @@ interface iSetupValidateMessages {
  * and in the Typescript interface `iSetupValidateMessages`
  *
  * @see iSetupValidateMessages
- * @see https://www.github.com/zS1L3NT/ts-validate-all-types
+ * @see https://www.github.com/zS1L3NT/ts-validate-any
  * @example
  * setup_validate_messages({
  *     not_type: `Bad type, expected %type%`

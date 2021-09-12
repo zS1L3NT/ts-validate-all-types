@@ -1,30 +1,33 @@
-# validate-all-types
-[![Build Status](https://travis-ci.org/rodgc/validate-all-types.svg?branch=master)](https://travis-ci.org/rodgc/validate-all-types)
-[![npm version](https://badge.fury.io/js/validate-all-types.svg)](https://badge.fury.io/js/validate-all-types)
+# validate-any
 
+[![Build Status](https://travis-ci.org/rodgc/validate-any.svg?branch=master)](https://travis-ci.org/rodgc/validate-any)
+[![npm version](https://badge.fury.io/js/validate-any.svg)](https://badge.fury.io/js/validate-any)
 
-## What is `validate-all-types`?
-This package is a type validator mainly for Typescript (also works with Javascript).
-Ever faced those issues where you're trying to make sure a type `any` is an instance of an interface? This is the issue this package was designed to solve.
-With this package, you can safely assert the type for an object and return customised errors if the types are incorrect
+## What is `validate-any`?
 
+This package is a type validator mainly for Typescript (also works with Javascript). Ever faced those issues where
+you're trying to make sure a type `any` is an instance of an interface? This is the issue this package was designed to
+solve. With this package, you can safely assert the type for an object and return customised errors if the types are
+incorrect
 
 ## Installation & Usage
-> $ npm install validate-all-types
+
+> $ npm install validate-any
 
 or
 
-> $ yarn add validate-all-types
+> $ yarn add validate-any
 
 then import the module like this:
 ```ts
 // Typescript
-import { validate } from "validate-all-types"
+import { validate } from "validate-any"
 
 // Javascript
-const { validate } = require("validate-all-types")
+const { validate } = require("validate-any")
 ```
-Typescript typings are automatically included so there's no need to install anything like `@types/validate-all-types` !
+
+Typescript typings are automatically included so there's no need to install anything like `@types/validate-any` !
 
 
 ## How the `validate` function works
@@ -79,7 +82,7 @@ Type          | Description
 <br>
 
 ```ts
-import { validate, STRING } from "validate-all-types"
+import { validate, STRING } from "validate-any"
 
 console.log(validate("string", STRING()))
 // > { success: true, errors: [] }
@@ -117,7 +120,7 @@ Type          | Description
 <br>
 
 ```ts
-import { validate, NUMBER } from "validate-all-types"
+import { validate, NUMBER } from "validate-any"
 
 console.log(validate(3, NUMBER()))
 // > { success: true, errors: [] }
@@ -142,7 +145,7 @@ Type      | Description
 <br>
 
 ```ts
-import { validate, BOOLEAN } from "validate-all-types"
+import { validate, BOOLEAN } from "validate-any"
 
 console.log(validate(true, BOOLEAN()))
 // > { success: true, errors: [] }
@@ -166,7 +169,7 @@ Type       | Description
 <br>
 
 ```ts
-import { validate, NULL } from "validate-all-types"
+import { validate, NULL } from "validate-any"
 
 console.log(validate(null, NULL()))
 // > { success: true, errors: [] }
@@ -184,7 +187,7 @@ Type        | Description
 <br>
 
 ```ts
-import { validate, UNDEFINED } from "validate-all-types"
+import { validate, UNDEFINED } from "validate-any"
 
 console.log(validate(undefined, UNDEFINED()))
 // > { success: true, errors: [] }
@@ -203,7 +206,7 @@ Type             | Description
 <br>
 
 ```ts
-import { validate, LIST, STRING, NUMBER } from "validate-all-types"
+import { validate, LIST, STRING, NUMBER } from "validate-any"
 
 console.log(validate([1, 2, 3, 4, 5], LIST()))
 // > { success: true, errors: [] }
@@ -249,7 +252,7 @@ We can use `OBJECT()` to validate objects.
 `OBJECT()` only allows 1 optional parameter which maps out what the properties will look like
 
 ```ts
-import { validate, OBJECT } from "validate-all-types"
+import { validate, OBJECT } from "validate-any"
 
 console.log(validate({ property: "value" }, OBJECT()))
 // > { success: true, errors: [] }
@@ -314,7 +317,7 @@ Type             | Description
 <br>
 
 ```ts
-import { validate, OR, STRING, NUMBER, BOOLEAN } from "validate-all-types"
+import { validate, OR, STRING, NUMBER, BOOLEAN } from "validate-any"
 
 console.log(validate("string", OR()))
 // > Error: *: Expected developer to provide at least 1 rule for the OR operation
@@ -346,7 +349,7 @@ Error messages can be very specific to which exact value was validated wrongly. 
 default error template and replaces specified parts of the message with custom values. Here's what I mean:
 
 ```ts
-import { NUMBER, setup_validate_messages, validate } from "validate-all-types"
+import { NUMBER, setup_validate_messages, validate } from "validate-any"
 
 // Call this function this way to set up the new error messages
 setup_validate_messages({
@@ -378,7 +381,7 @@ the `req.body` or `req.params`
 before invalid types mess your code up
 
 ```ts
-import { validate_express, OBJECT, STRING } from "validate-all-types"
+import { validate_express, OBJECT, STRING } from "validate-any"
 
 // ----snip----
 
