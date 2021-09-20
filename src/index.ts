@@ -54,18 +54,15 @@ const validate = (
 }
 
 /**
- * Use this function to verify the types for an express request.
+ * Use this function to verify the types for an express request's body
  * This way, you can catch errors before they affect your express callback
  *
- * @param item Can either verify the `req.body` or `req.params` object
  * @param rule Rule to compare the object with
  */
 const validate_express = (
-	item: "body" | "params",
 	rule: Validator
 ) => (req: any, res: any, next: Function) => {
-	const data = req[item]
-	const { success, errors } = validate(data, rule, item)
+	const { success, errors } = validate(req.body, rule, "body")
 
 	if (success) next()
 	else res.status(400).send(errors)
