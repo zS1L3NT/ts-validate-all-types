@@ -1,0 +1,7 @@
+/node_modules
+/src
+.gitignore
+.editorconfig
+.prettierrc
+nodemon.json
+tsconfig.json
