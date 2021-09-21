@@ -1,6 +1,6 @@
 {
 	"name": "validate-any",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"description": "Data Validator",
 	"main": "build/index.js",
 	"types": "build/index.d.ts",
@@ -10,7 +10,9 @@
 		"type": "git",
 		"url": "https://github.com/zS1L3NT/ts-validate-any"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"js-beautify": "^1.14.0"
+	},
 	"engines": {
 		"node": ">=0.12"
 	},
