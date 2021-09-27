@@ -1,5 +1,5 @@
-import UndefinedValidator from "../validators/UndefinedValidator"
 import Validator from "../classes/Validator"
+import UndefinedValidator from "../validators/UndefinedValidator"
 
 /**
  * Checks if next parameter is of type 'undefined'

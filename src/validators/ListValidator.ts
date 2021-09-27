@@ -1,5 +1,5 @@
-import Validator from "../classes/Validator"
 import Reporter from "../classes/Reporter"
+import Validator from "../classes/Validator"
 import { OR } from "../index"
 
 export default class ListValidator extends Validator {

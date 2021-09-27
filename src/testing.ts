@@ -1,17 +1,32 @@
-import { BOOLEAN, LIST, NULL, NUMBER, OBJECT, OR, STRING, UNDEFINED, validate } from "./index"
+import {
+	BOOLEAN,
+	LIST,
+	NULL,
+	NUMBER,
+	OBJECT,
+	OR,
+	STRING,
+	UNDEFINED,
+	validate
+} from "./index"
 import Validator from "./classes/Validator"
 
-const assert = (data: any, rule: Validator, correct: boolean, errors: number = 0) => {
+const assert = (
+	data: any,
+	rule: Validator,
+	correct: boolean,
+	errors: number = 0
+) => {
 	const result = validate(data, rule)
 	if (result.success === correct) {
 		if (result.errors.length === errors) {
 			// Correct
+		} else {
+			throw new Error(
+				`Expected ${errors} errors, got ${result.errors.length} errors`
+			)
 		}
-		else {
-			throw new Error(`Expected ${errors} errors, got ${result.errors.length} errors`)
-		}
-	}
-	else {
+	} else {
 		throw new Error(result.errors.toString())
 	}
 }
@@ -67,11 +82,21 @@ assert({ name: "" }, OBJECT({}), false, 1)
 assert({}, OBJECT({ name: OR(STRING(), UNDEFINED()) }), true)
 assert({ age: 12 }, OBJECT({ name: STRING() }), false, 2)
 assert({ notes: ["cool"] }, OBJECT({ notes: LIST() }), true)
-assert({ notes: ["cool"], setting: {} }, OBJECT({ notes: LIST(), settings: OBJECT({}) }), false, 2)
-assert({ notes: ["cool"], settings: {} }, OBJECT({
-	notes: LIST(),
-	settings: OBJECT({ is_admin: BOOLEAN() })
-}), false, 1)
+assert(
+	{ notes: ["cool"], setting: {} },
+	OBJECT({ notes: LIST(), settings: OBJECT({}) }),
+	false,
+	2
+)
+assert(
+	{ notes: ["cool"], settings: {} },
+	OBJECT({
+		notes: LIST(),
+		settings: OBJECT({ is_admin: BOOLEAN() })
+	}),
+	false,
+	1
+)
 console.log("Validators: object    ✅")
 // endregion
 

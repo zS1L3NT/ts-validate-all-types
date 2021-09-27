@@ -19,12 +19,14 @@ export default abstract class Validator {
 		return beautify(this.schema, { indent_size: 4 })
 	}
 
-	public replaceText(text: string, object: { [property: string]: any }): string {
+	public replaceText(
+		text: string,
+		object: { [property: string]: any }
+	): string {
 		for (const [key, value] of Object.entries(object)) {
 			text = text.replaceAll(`%${key}%`, value)
 		}
 
 		return text
 	}
-
 }

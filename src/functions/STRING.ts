@@ -1,5 +1,5 @@
-import StringValidator from "../validators/StringValidator"
 import Validator from "../classes/Validator"
+import StringValidator from "../validators/StringValidator"
 
 /**
  * Checks if next parameter is exactly the same as one of the passed rules here

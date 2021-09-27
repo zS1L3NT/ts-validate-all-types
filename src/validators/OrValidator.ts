@@ -1,5 +1,5 @@
-import Validator from "../classes/Validator"
 import Reporter from "../classes/Reporter"
+import Validator from "../classes/Validator"
 
 export default class OrValidator extends Validator {
 	public static not_among_rules = `Expected value to match at least one of the given rules: %rules%`

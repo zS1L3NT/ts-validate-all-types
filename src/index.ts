@@ -1,17 +1,17 @@
 import Reporter from "./classes/Reporter"
-import STRING from "./functions/STRING"
-import NUMBER from "./functions/NUMBER"
+import Validator from "./classes/Validator"
 import BOOLEAN from "./functions/BOOLEAN"
 import LIST from "./functions/LIST"
-import OBJECT from "./functions/OBJECT"
 import NULL from "./functions/NULL"
-import UNDEFINED from "./functions/UNDEFINED"
+import NUMBER from "./functions/NUMBER"
+import OBJECT from "./functions/OBJECT"
 import OR from "./functions/OR"
-import Validator from "./classes/Validator"
-import StringValidator from "./validators/StringValidator"
+import STRING from "./functions/STRING"
+import UNDEFINED from "./functions/UNDEFINED"
 import NumberValidator from "./validators/NumberValidator"
 import ObjectValidator from "./validators/ObjectValidator"
 import OrValidator from "./validators/OrValidator"
+import StringValidator from "./validators/StringValidator"
 
 /**
  * Results on how the object rule matching went
@@ -44,10 +44,13 @@ const validate = (
 	}
 
 	if (result.success === result.errors.length > 0) {
-		console.warn("Error with typechecking. Create an issue on https://github.com/zS1L3NT/ts-validate-any with the PATTERN AND the data below", {
-			data,
-			errors: result.errors
-		})
+		console.warn(
+			"Error with typechecking. Create an issue on https://github.com/zS1L3NT/ts-npm-validate-any with the PATTERN AND the data below",
+			{
+				data,
+				errors: result.errors
+			}
+		)
 	}
 
 	return result
@@ -59,14 +62,13 @@ const validate = (
  *
  * @param rule Rule to compare the object with
  */
-const validate_express = (
-	rule: Validator
-) => (req: any, res: any, next: Function) => {
-	const { success, errors } = validate(req.body, rule, "body")
+const validate_express =
+	(rule: Validator) => (req: any, res: any, next: Function) => {
+		const { success, errors } = validate(req.body, rule, "body")
 
-	if (success) next()
-	else res.status(400).send(errors)
-}
+		if (success) next()
+		else res.status(400).send(errors)
+	}
 
 /**
  * Interface holding input type of `setup_validate_messages()`
@@ -101,7 +103,7 @@ interface iSetupValidateMessages {
  * and in the Typescript interface `iSetupValidateMessages`
  *
  * @see iSetupValidateMessages
- * @see https://www.github.com/zS1L3NT/ts-validate-any
+ * @see https://www.github.com/zS1L3NT/ts-npm-validate-any
  * @example
  * setup_validate_messages({
  *     not_type: `Bad type, expected %type%`
@@ -113,15 +115,15 @@ interface iSetupValidateMessages {
  * // }
  */
 const setup_validate_messages = ({
-									 not_type,
-									 not_value,
-									 not_regex_match,
-									 not_among_strings,
-									 not_among_numbers,
-									 not_among_rules,
-									 missing_property,
-									 unknown_property
-								 }: iSetupValidateMessages) => {
+	not_type,
+	not_value,
+	not_regex_match,
+	not_among_strings,
+	not_among_numbers,
+	not_among_rules,
+	missing_property,
+	unknown_property
+}: iSetupValidateMessages) => {
 	if (not_type) Validator.not_type = not_type
 	if (not_value) Validator.not_value = not_value
 	if (not_regex_match) StringValidator.not_regex_match = not_regex_match
@@ -146,3 +148,4 @@ export {
 	OR,
 	iValidationResult
 }
+

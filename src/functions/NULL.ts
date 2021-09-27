@@ -1,5 +1,5 @@
-import NullValidator from "../validators/NullValidator"
 import Validator from "../classes/Validator"
+import NullValidator from "../validators/NullValidator"
 
 /**
  * Checks if next parameter is of type 'null'

@@ -1,5 +1,5 @@
-import Validator from "../classes/Validator"
 import Reporter from "../classes/Reporter"
+import Validator from "../classes/Validator"
 
 export default class ObjectValidator extends Validator {
 	public static missing_property = `Expected value to contain property: %property%`

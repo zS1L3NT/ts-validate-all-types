@@ -1,5 +1,5 @@
-import Validator from "../classes/Validator"
 import Reporter from "../classes/Reporter"
+import Validator from "../classes/Validator"
 
 export default class NumberValidator extends Validator {
 	public static not_among_numbers = `Expected value to be one of the numbers: %numbers%`
