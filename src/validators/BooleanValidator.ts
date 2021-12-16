@@ -1,10 +1,10 @@
-import Validator from "../classes/Validator"
 import Reporter from "../classes/Reporter"
+import Validator from "../classes/Validator"
 
-export default class BooleanValidator extends Validator {
-	private readonly boolean?: boolean
+export default class BooleanValidator<T extends boolean> extends Validator {
+	private readonly boolean?: T
 
-	public constructor(boolean?: boolean) {
+	public constructor(boolean?: T) {
 		super()
 
 		this.boolean = boolean

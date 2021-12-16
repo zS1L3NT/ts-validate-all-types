@@ -2,8 +2,7 @@ import Reporter from "../classes/Reporter"
 import Validator from "../classes/Validator"
 
 export default class NullValidator extends Validator {
-
-	constructor() {
+	public constructor() {
 		super()
 
 		this.schema = `null`
@@ -20,5 +19,4 @@ export default class NullValidator extends Validator {
 
 		return true
 	}
-
 }

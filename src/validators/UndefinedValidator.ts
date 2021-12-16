@@ -2,7 +2,6 @@ import Reporter from "../classes/Reporter"
 import Validator from "../classes/Validator"
 
 export default class UndefinedValidator extends Validator {
-
 	public constructor() {
 		super()
 
@@ -20,5 +19,4 @@ export default class UndefinedValidator extends Validator {
 
 		return true
 	}
-
 }

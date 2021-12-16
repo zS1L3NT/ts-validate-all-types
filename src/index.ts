@@ -1,17 +1,17 @@
-import Reporter from "./classes/Reporter"
-import Validator from "./classes/Validator"
 import BOOLEAN from "./functions/BOOLEAN"
 import LIST from "./functions/LIST"
 import NULL from "./functions/NULL"
 import NUMBER from "./functions/NUMBER"
-import OBJECT from "./functions/OBJECT"
-import OR from "./functions/OR"
-import STRING from "./functions/STRING"
-import UNDEFINED from "./functions/UNDEFINED"
 import NumberValidator from "./validators/NumberValidator"
+import OBJECT from "./functions/OBJECT"
 import ObjectValidator from "./validators/ObjectValidator"
+import OR from "./functions/OR"
 import OrValidator from "./validators/OrValidator"
+import Reporter from "./classes/Reporter"
+import STRING from "./functions/STRING"
 import StringValidator from "./validators/StringValidator"
+import UNDEFINED from "./functions/UNDEFINED"
+import Validator from "./classes/Validator"
 
 /**
  * Results on how the object rule matching went
@@ -19,10 +19,9 @@ import StringValidator from "./validators/StringValidator"
  * @param success Whether the data matched the rule defined
  * @param errors List of corrections in the data to make
  */
-interface iValidationResult {
-	success: boolean
-	errors: string[]
-}
+type iValidationResult =
+	| { success: true; errors: [] }
+	| { success: false; errors: string[] }
 
 /**
  * Function to check the type of an expression
@@ -32,28 +31,35 @@ interface iValidationResult {
  *
  * @return object The result of whether the object matched the rule
  */
-const validate = (
+const validate = <T extends Validator>(
 	data: any,
-	rule: Validator,
+	rule: T,
 	name: string = "*"
 ): iValidationResult => {
 	const reporter = new Reporter([name], [], false)
-	const result = {
-		success: rule.validate(data, reporter),
-		errors: reporter.reports
-	}
+	const success = rule.validate(data, reporter)
 
-	if (result.success === result.errors.length > 0) {
+	if (success === reporter.reports.length > 0) {
 		console.warn(
 			"Error with typechecking. Create an issue on https://github.com/zS1L3NT/ts-npm-validate-any with the PATTERN AND the data below",
 			{
 				data,
-				errors: result.errors
+				errors: reporter.reports
 			}
 		)
 	}
 
-	return result
+	if (success) {
+		return {
+			success,
+			errors: []
+		}
+	} else {
+		return {
+			success,
+			errors: reporter.reports
+		}
+	}
 }
 
 /**
@@ -148,4 +154,3 @@ export {
 	OR,
 	iValidationResult
 }
-

@@ -1,11 +1,11 @@
 import Reporter from "../classes/Reporter"
 import Validator from "../classes/Validator"
 
-export default class NumberValidator extends Validator {
+export default class NumberValidator<T extends number> extends Validator {
 	public static not_among_numbers = `Expected value to be one of the numbers: %numbers%`
-	private readonly numbers: number[]
+	private readonly numbers: T[]
 
-	public constructor(numbers: number[]) {
+	public constructor(numbers: T[]) {
 		super()
 
 		this.numbers = numbers
@@ -15,7 +15,6 @@ export default class NumberValidator extends Validator {
 			this.schema = numbers.join(" | ")
 		}
 	}
-
 
 	public validate(data: any, reporter: Reporter): boolean {
 		if (typeof data !== "number") {
@@ -27,7 +26,7 @@ export default class NumberValidator extends Validator {
 		}
 
 		if (this.numbers.length > 0) {
-			if (!this.numbers.includes(data)) {
+			if (!this.numbers.includes(data as T)) {
 				return reporter.complain(
 					this.replaceText(NumberValidator.not_among_numbers, {
 						numbers: this.numbers
@@ -38,5 +37,4 @@ export default class NumberValidator extends Validator {
 
 		return true
 	}
-
 }

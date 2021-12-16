@@ -5,16 +5,22 @@ import StringValidator from "../validators/StringValidator"
  * If no parameter passed, checks if next parameter is of type 'string'
  * @param rules Strings
  */
-export default function STRING(...rules: string[]): StringValidator
+export default function STRING<T extends string | RegExp>(
+	...rules: string[]
+): StringValidator<T>
 /**
  * Checks if next parameter matches the passed RegExp here
  * @param rules Rule
  */
-export default function STRING(rules: RegExp): StringValidator
+export default function STRING<T extends string | RegExp>(
+	rules: RegExp
+): StringValidator<T>
 /**
  *
  * @param rules Unaccepted types
  */
-export default function STRING(...rules: any[]): StringValidator {
+export default function STRING<T extends string | RegExp>(
+	...rules: any[]
+): StringValidator<T> {
 	return new StringValidator(rules)
 }

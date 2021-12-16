@@ -5,6 +5,6 @@ import NumberValidator from "../validators/NumberValidator"
  * If no parameter passed, checks if next parameter is of type 'number'
  * @param numbers Numbers
  */
-export default function NUMBER(...numbers: number[]): NumberValidator {
+export default <T extends number>(...numbers: T[]): NumberValidator<T> => {
 	return new NumberValidator(numbers)
 }

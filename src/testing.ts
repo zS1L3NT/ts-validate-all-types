@@ -11,9 +11,9 @@ import {
 } from "./index"
 import Validator from "./classes/Validator"
 
-const assert = (
+const assert = <T extends Validator>(
 	data: any,
-	rule: Validator,
+	rule: T,
 	correct: boolean,
 	errors: number = 0
 ) => {

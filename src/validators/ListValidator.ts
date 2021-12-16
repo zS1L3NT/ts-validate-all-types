@@ -2,17 +2,19 @@ import Reporter from "../classes/Reporter"
 import Validator from "../classes/Validator"
 import { OR } from "../index"
 
-export default class ListValidator extends Validator {
-	private readonly validators: Validator[]
+export default class ListValidator<T extends Validator[]> extends Validator {
+	private readonly validators: T
 
-	public constructor(validators: Validator[]) {
+	public constructor(validators: T) {
 		super()
 
 		this.validators = validators
 		if (validators.length === 0) {
 			this.schema = `any[]`
 		} else {
-			this.schema = `(${validators.map(validator => validator.schema).join(" | ")})[]`
+			this.schema = `(${validators
+				.map(validator => validator.schema)
+				.join(" | ")})[]`
 		}
 	}
 
@@ -43,5 +45,4 @@ export default class ListValidator extends Validator {
 
 		return _return
 	}
-
 }

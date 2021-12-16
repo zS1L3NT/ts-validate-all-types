@@ -1,19 +1,20 @@
 import Reporter from "../classes/Reporter"
 import Validator from "../classes/Validator"
 
-export default class StringValidator extends Validator {
+export default class StringValidator<
+	T extends string | RegExp
+> extends Validator {
 	public static not_regex_match = `Expected value to match RegExp: %regex%`
 	public static not_among_strings = `Expected value to be one of the strings: %strings%`
-	private readonly rules: any[]
+	private readonly rules: T[]
 
-	public constructor(rules: any[]) {
+	public constructor(rules: T[]) {
 		super()
 
 		this.rules = rules
 		if (rules.length === 0) {
 			this.schema = `string`
-		}
-		else {
+		} else {
 			this.schema = rules.map(rule => rule || `""`).join(" | ")
 		}
 	}
@@ -39,9 +40,8 @@ export default class StringValidator extends Validator {
 					})
 				)
 			}
-		}
-		else if (this.rules.length > 0) {
-			if (!this.rules.includes(data)) {
+		} else if (this.rules.length > 0) {
+			if (!this.rules.includes(data as T)) {
 				return reporter.complain(
 					this.replaceText(StringValidator.not_among_strings, {
 						strings: this.rules
@@ -52,5 +52,4 @@ export default class StringValidator extends Validator {
 
 		return true
 	}
-
 }
