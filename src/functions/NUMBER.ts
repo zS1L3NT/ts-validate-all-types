@@ -1,4 +1,3 @@
-import Validator from "../classes/Validator"
 import NumberValidator from "../validators/NumberValidator"
 
 /**
@@ -6,6 +5,6 @@ import NumberValidator from "../validators/NumberValidator"
  * If no parameter passed, checks if next parameter is of type 'number'
  * @param numbers Numbers
  */
-export default function NUMBER(...numbers: number[]): Validator {
+export default function NUMBER(...numbers: number[]): NumberValidator {
 	return new NumberValidator(numbers)
 }
