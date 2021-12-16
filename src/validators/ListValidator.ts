@@ -2,10 +2,10 @@ import Reporter from "../classes/Reporter"
 import Validator from "../classes/Validator"
 import { OR } from "../index"
 
-export default class ListValidator<T extends Validator[]> extends Validator {
-	private readonly validators: T
+export default class ListValidator<V extends Validator[]> extends Validator {
+	private readonly validators: V
 
-	public constructor(validators: T) {
+	public constructor(validators: V) {
 		super()
 
 		this.validators = validators

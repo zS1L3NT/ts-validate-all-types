@@ -6,6 +6,6 @@ import Validator from "../classes/Validator"
  * If no parameter passed, checks if next parameter is of type 'list'
  * @param rules Rules
  */
-export default <T extends Validator[]>(...rules: T): ListValidator<T> => {
+export default <V extends Validator[]>(...rules: V): ListValidator<V> => {
 	return new ListValidator(rules)
 }

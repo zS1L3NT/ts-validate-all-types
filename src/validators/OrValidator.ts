@@ -1,11 +1,11 @@
 import Reporter from "../classes/Reporter"
 import Validator from "../classes/Validator"
 
-export default class OrValidator<T extends Validator[]> extends Validator {
+export default class OrValidator<V extends Validator[]> extends Validator {
 	public static not_among_rules = `Expected value to match at least one of the given rules: %rules%`
-	private readonly validators: T
+	private readonly validators: V
 
-	public constructor(validators: T) {
+	public constructor(validators: V) {
 		super()
 
 		this.validators = validators

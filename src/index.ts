@@ -31,9 +31,9 @@ type iValidationResult =
  *
  * @return object The result of whether the object matched the rule
  */
-const validate = <T extends Validator>(
+const validate = <V extends Validator>(
 	data: any,
-	rule: T,
+	rule: V,
 	name: string = "*"
 ): iValidationResult => {
 	const reporter = new Reporter([name], [], false)

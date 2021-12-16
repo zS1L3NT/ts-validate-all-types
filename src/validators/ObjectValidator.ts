@@ -2,13 +2,13 @@ import Reporter from "../classes/Reporter"
 import Validator from "../classes/Validator"
 
 export default class ObjectValidator<
-	T extends { [property: string]: Validator }
+	V extends { [property: string]: Validator }
 > extends Validator {
 	public static missing_property = `Expected value to contain property: %property%`
 	public static unknown_property = `Value has unknown property: %property%`
-	private readonly rule_object?: T
+	private readonly rule_object?: V
 
-	public constructor(rule_object?: T) {
+	public constructor(rule_object?: V) {
 		super()
 
 		this.rule_object = rule_object
