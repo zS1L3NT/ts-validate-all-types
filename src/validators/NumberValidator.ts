@@ -1,7 +1,8 @@
 import Reporter from "../classes/Reporter"
 import Validator from "../classes/Validator"
+import { iValidationResult } from ".."
 
-export default class NumberValidator<T extends number> extends Validator {
+export default class NumberValidator<T extends number> extends Validator<T> {
 	public static not_among_numbers = `Expected value to be one of the numbers: %numbers%`
 	private readonly numbers: T[]
 
@@ -16,7 +17,7 @@ export default class NumberValidator<T extends number> extends Validator {
 		}
 	}
 
-	public validate(data: any, reporter: Reporter): boolean {
+	public validate(data: any, reporter: Reporter): iValidationResult<T> {
 		if (typeof data !== "number") {
 			return reporter.complain(
 				this.replaceText(Validator.not_type, {
@@ -35,6 +36,6 @@ export default class NumberValidator<T extends number> extends Validator {
 			}
 		}
 
-		return true
+		return this.success(data as T)
 	}
 }

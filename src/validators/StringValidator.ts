@@ -1,9 +1,10 @@
 import Reporter from "../classes/Reporter"
 import Validator from "../classes/Validator"
+import { iValidationResult } from ".."
 
 export default class StringValidator<
 	T extends string | RegExp
-> extends Validator {
+> extends Validator<T> {
 	public static not_regex_match = `Expected value to match RegExp: %regex%`
 	public static not_among_strings = `Expected value to be one of the strings: %strings%`
 	private readonly rules: T[]
@@ -19,7 +20,7 @@ export default class StringValidator<
 		}
 	}
 
-	public validate(data: any, reporter: Reporter): boolean {
+	public validate(data: any, reporter: Reporter): iValidationResult<T> {
 		if (typeof data !== "string") {
 			return reporter.complain(
 				this.replaceText(Validator.not_type, {
@@ -50,6 +51,6 @@ export default class StringValidator<
 			}
 		}
 
-		return true
+		return this.success(data as T)
 	}
 }

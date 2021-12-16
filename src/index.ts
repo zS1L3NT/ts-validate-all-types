@@ -19,9 +19,9 @@ import Validator from "./classes/Validator"
  * @param success Whether the data matched the rule defined
  * @param errors List of corrections in the data to make
  */
-type iValidationResult =
-	| { success: true; errors: [] }
-	| { success: false; errors: string[] }
+type iValidationResult<T> =
+	| { success: true; errors: []; data: T }
+	| { success: false; errors: string[]; data: undefined }
 
 /**
  * Function to check the type of an expression
@@ -31,15 +31,15 @@ type iValidationResult =
  *
  * @return object The result of whether the object matched the rule
  */
-const validate = <V extends Validator>(
+const validate = <T>(
 	data: any,
-	rule: V,
+	rule: Validator<T>,
 	name: string = "*"
-): iValidationResult => {
+): iValidationResult<T> => {
 	const reporter = new Reporter([name], [], false)
-	const success = rule.validate(data, reporter)
+	const result = rule.validate(data, reporter)
 
-	if (success === reporter.reports.length > 0) {
+	if (result.success === reporter.reports.length > 0) {
 		console.warn(
 			"Error with typechecking. Create an issue on https://github.com/zS1L3NT/ts-npm-validate-any with the PATTERN AND the data below",
 			{
@@ -49,17 +49,7 @@ const validate = <V extends Validator>(
 		)
 	}
 
-	if (success) {
-		return {
-			success,
-			errors: []
-		}
-	} else {
-		return {
-			success,
-			errors: reporter.reports
-		}
-	}
+	return result
 }
 
 /**
@@ -69,7 +59,8 @@ const validate = <V extends Validator>(
  * @param rule Rule to compare the object with
  */
 const validate_express =
-	(rule: Validator) => (req: any, res: any, next: Function) => {
+	<T>(rule: Validator<T>) =>
+	(req: any, res: any, next: Function) => {
 		const { success, errors } = validate(req.body, rule, "body")
 
 		if (success) next()

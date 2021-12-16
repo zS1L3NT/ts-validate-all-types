@@ -1,7 +1,8 @@
 import Reporter from "../classes/Reporter"
 import Validator from "../classes/Validator"
+import { iValidationResult } from ".."
 
-export default class BooleanValidator<T extends boolean> extends Validator {
+export default class BooleanValidator<T extends boolean> extends Validator<T> {
 	private readonly boolean?: T
 
 	public constructor(boolean?: T) {
@@ -15,7 +16,7 @@ export default class BooleanValidator<T extends boolean> extends Validator {
 		}
 	}
 
-	public validate(data: any, reporter: Reporter): boolean {
+	public validate(data: any, reporter: Reporter): iValidationResult<T> {
 		if (typeof data !== "boolean") {
 			return reporter.complain(
 				this.replaceText(Validator.not_type, {
@@ -32,6 +33,6 @@ export default class BooleanValidator<T extends boolean> extends Validator {
 			)
 		}
 
-		return true
+		return this.success(data as T)
 	}
 }

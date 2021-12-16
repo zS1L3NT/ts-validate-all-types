@@ -1,3 +1,5 @@
+import { iValidationResult } from ".."
+
 export default class Reporter {
 	private readonly stack: string[]
 	public reports: string[]
@@ -20,8 +22,8 @@ export default class Reporter {
 		throw new Error(report)
 	}
 
-	public complain(message: string): false {
-		if (this.silent) return false
+	public complain<T>(message: string): iValidationResult<T> {
+		if (this.silent) return { success: false, errors: [], data: undefined }
 		let report = ""
 		for (let i = 0, il = this.stack.length; i < il; i++) {
 			if (i === 0) report += `${this.stack[i]}`
@@ -30,7 +32,7 @@ export default class Reporter {
 		report += ": " + message
 
 		this.reports.push(report)
-		return false
+		return { success: false, errors: this.reports, data: undefined }
 	}
 
 	public silence() {

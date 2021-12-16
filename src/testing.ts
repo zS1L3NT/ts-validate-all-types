@@ -1,3 +1,4 @@
+import Validator from "./classes/Validator"
 import {
 	BOOLEAN,
 	LIST,
@@ -9,11 +10,10 @@ import {
 	UNDEFINED,
 	validate
 } from "./index"
-import Validator from "./classes/Validator"
 
-const assert = <V extends Validator>(
+const assert = <T>(
 	data: any,
-	rule: V,
+	rule: Validator<T>,
 	correct: boolean,
 	errors: number = 0
 ) => {
@@ -119,8 +119,8 @@ console.log("Validators: undefined ✅")
 // endregion
 
 // region or
-assert(0, OR(STRING(), NUMBER()), true)
+assert(0, OR<string | number>(STRING(), NUMBER()), true)
 assert(0, OR(NULL(), UNDEFINED()), false, 1)
-assert(0, OR(STRING("hi", "bye"), NUMBER(1, 2)), false, 1)
+assert(0, OR<"hi" | "bye" | 1 | 2>(STRING("hi", "bye"), NUMBER(1, 2)), false, 1)
 console.log("Validators: or        ✅")
 // endregion

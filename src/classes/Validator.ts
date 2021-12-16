@@ -1,13 +1,17 @@
 import Reporter from "./Reporter"
+import { iValidationResult } from ".."
 
 const beautify = require("js-beautify").js
 
-export default abstract class Validator {
+export default abstract class Validator<T> {
 	public static not_type = `Expected value to be of type: %type%`
 	public static not_value = `Expected value to be: %value%`
 	public schema = ""
 
-	public abstract validate(data: any, reporter: Reporter): boolean
+	public abstract validate(
+		data: any,
+		reporter: Reporter
+	): iValidationResult<T>
 
 	/**
 	 * A rough gauge of what the schema looks like
@@ -28,5 +32,13 @@ export default abstract class Validator {
 		}
 
 		return text
+	}
+
+	protected success(data: T): iValidationResult<T> {
+		return {
+			success: true,
+			errors: [],
+			data: data as T
+		}
 	}
 }

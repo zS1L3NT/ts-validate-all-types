@@ -1,11 +1,11 @@
 import Reporter from "../classes/Reporter"
 import Validator from "../classes/Validator"
-import { OR } from "../index"
+import { iValidationResult, OR } from "../index"
 
-export default class ListValidator<V extends Validator[]> extends Validator {
-	private readonly validators: V
+export default class ListValidator<T> extends Validator<T[]> {
+	private readonly validators: Validator<T>[]
 
-	public constructor(validators: V) {
+	public constructor(validators: Validator<T>[]) {
 		super()
 
 		this.validators = validators
@@ -17,8 +17,7 @@ export default class ListValidator<V extends Validator[]> extends Validator {
 				.join(" | ")})[]`
 		}
 	}
-
-	public validate(data: any, reporter: Reporter): boolean {
+	public validate(data: any, reporter: Reporter): iValidationResult<T[]> {
 		if (!Array.isArray(data)) {
 			return reporter.complain(
 				this.replaceText(Validator.not_type, {
@@ -27,14 +26,14 @@ export default class ListValidator<V extends Validator[]> extends Validator {
 			)
 		}
 
-		if (this.validators.length === 0) return true
+		if (this.validators.length === 0) return this.success(data as T[])
 
-		let _return = true
+		let _return = this.success(data as T[])
 		for (const i in Array(data.length).fill(0)) {
 			const stacked_reporter = reporter.setStack(`[${i}]`)
 			const validator = OR(...this.validators)
 
-			if (!validator.validate(data[i], stacked_reporter.silence())) {
+			if (!validator.validate(data[i], stacked_reporter.silence()).success) {
 				_return = stacked_reporter.complain(
 					this.replaceText(Validator.not_type, {
 						type: validator.formatSchema()

@@ -1,14 +1,13 @@
 import Reporter from "../classes/Reporter"
 import Validator from "../classes/Validator"
+import { iValidationResult } from ".."
 
-export default class ObjectValidator<
-	V extends { [property: string]: Validator }
-> extends Validator {
+export default class ObjectValidator<T> extends Validator<T> {
 	public static missing_property = `Expected value to contain property: %property%`
 	public static unknown_property = `Value has unknown property: %property%`
-	private readonly rule_object?: V
+	private readonly rule_object?: { [property: string]: Validator<T> }
 
-	public constructor(rule_object?: V) {
+	public constructor(rule_object?: { [property: string]: Validator<T> }) {
 		super()
 
 		this.rule_object = rule_object
@@ -30,7 +29,7 @@ export default class ObjectValidator<
 		}
 	}
 
-	public validate(data: any, reporter: Reporter): boolean {
+	public validate(data: any, reporter: Reporter): iValidationResult<T> {
 		if (typeof data !== "object" || Array.isArray(data) || data === null) {
 			return reporter.complain(
 				this.replaceText(Validator.not_type, {
@@ -39,14 +38,14 @@ export default class ObjectValidator<
 			)
 		}
 
-		if (!this.rule_object) return true
+		if (!this.rule_object) return this.success(data)
 
-		let _return = true
+		let _return = this.success(data)
 		for (const [rule_key, rule_value] of Object.entries(this.rule_object)) {
 			const rule_rejects_undefined = !rule_value.validate(
 				undefined,
 				reporter.silence()
-			)
+			).success
 
 			if (
 				!Object.keys(data).includes(rule_key) &&
@@ -73,7 +72,7 @@ export default class ObjectValidator<
 				continue
 			}
 
-			if (!rule.validate(data_value, stacked_reporter.silence())) {
+			if (!rule.validate(data_value, stacked_reporter.silence()).success) {
 				_return = stacked_reporter.complain(
 					this.replaceText(Validator.not_type, {
 						type: data_key

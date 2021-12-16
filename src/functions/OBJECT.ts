@@ -6,8 +6,10 @@ import Validator from "../classes/Validator"
  * If no parameter passed, checks if next parameter is of type 'number'
  * @param rule_object Rule
  */
-export default <T extends { [property: string]: Validator }>(
+export default <T extends { [property: string]: any }>(
 	rule_object?: T
-): ObjectValidator<T> => {
+): ObjectValidator<{
+	[K in keyof T]: T[K] extends Validator<infer U> ? U : undefined
+}> => {
 	return new ObjectValidator(rule_object)
 }
