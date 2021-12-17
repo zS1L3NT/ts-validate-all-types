@@ -17,6 +17,7 @@ export default class ListValidator<T> extends Validator<T[]> {
 				.join(" | ")})[]`
 		}
 	}
+
 	public validate(data: any, reporter: Reporter): iValidationResult<T[]> {
 		if (!Array.isArray(data)) {
 			return reporter.complain(
@@ -33,7 +34,9 @@ export default class ListValidator<T> extends Validator<T[]> {
 			const stacked_reporter = reporter.setStack(`[${i}]`)
 			const validator = OR(...this.validators)
 
-			if (!validator.validate(data[i], stacked_reporter.silence()).success) {
+			if (
+				!validator.validate(data[i], stacked_reporter.silence()).success
+			) {
 				_return = stacked_reporter.complain(
 					this.replaceText(Validator.not_type, {
 						type: validator.formatSchema()
