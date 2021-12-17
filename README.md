@@ -50,22 +50,27 @@ Property | Type       | Description
 ---------|------------|---------------------------------------------------------
 success  | `boolean`  | Whether the validation of the object was a success or failure. `true` if success, `false` if failure
 errors   | `string[]` | The list of corrections to make if any
+data     | `T`        | **The data you passed in with type annotations from the schema you passed in**
 
 ## Making a rule
 
 There are infinite combinations of rules we can make. The complexity of the rule only depends on how much code you are
 willing to write.
 
-### Validation basics with a string
+### Validation basics with `STRING()`
 
 Here is how to validate a string
 
 ```ts
 console.log(validate("string", STRING()))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: "string" }
 
 console.log(validate(0, STRING()))
-// > { success: false, errors: [ '*: Expected value to be of type: string' ] }
+// > {
+// >      success: false,
+// >      errors: [ '*: Expected value to be of type: string' ],
+// >      data: undefined
+// > }
 ```
 
 Notice that in the error message, the root element is called `*`
@@ -85,27 +90,39 @@ Type          | Description
 import { validate, STRING } from "validate-any"
 
 console.log(validate("string", STRING()))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: "string" }
 // This returned true because "string" is a string
 
 console.log(validate(0, STRING()))
-// > { success: false, errors: [ '*: Expected value to be of type: string' ] }
+// > {
+// >      success: false,
+// >      errors: [ '*: Expected value to be of type: string' ],
+// >      data: undefined
+// > }
 // This returned false because 0 is not a string
 
 console.log(validate("string", STRING(/^string$/)))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: "string" }
 // This returned true because "string" matches the RegExp /^string$/
 
 console.log(validate("string", STRING(/^something-else$/)))
-// > { success: false, errors: [ '*: Expected value to match RegExp: /^something-else$/' ] }
+// > {
+// >      success: false,
+// >      errors: [ '*: Expected value to match RegExp: /^something-else$/' ],
+// >      data: undefined
+// > }
 // This returned false because "string" didn't match the RegExp /^something-else$/
 
 console.log(validate("string", STRING("does", "the", "string", "match", "?")))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: "string" }
 // This returned true because "string" was passed into STRING() as a parameter
 
 console.log(validate("string", STRING("doesn't", "match"), "my-string"))
-// > { success: false, errors: [ `my-string: Expected value to be one of the strings: ["doesn't","match"]` ] }
+// > {
+// >      success: false,
+// >      errors: [ `my-string: Expected value to be one of the strings: ["doesn't","match"]` ],
+// >      data: undefined
+// > }
 // This returns false because "string" wasn't passed into STRING() as a parameter
 // Since I passed a third parameter to the validate function, the root got renamed from * to my-string
 ```
@@ -123,16 +140,24 @@ Type          | Description
 import { validate, NUMBER } from "validate-any"
 
 console.log(validate(3, NUMBER()))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: 3 }
 
 console.log(validate("string", NUMBER()))
-// > { success: false, errors: [ '*: Expected value to be of type: number' ] }
+// > {
+// >      success: false,
+// >      errors: [ '*: Expected value to be of type: number' ],
+// >      data: undefined
+// > }
 
 console.log(validate(3, NUMBER(1, 2, 3, 4, 5)))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: 3 }
 
 console.log(validate(3, NUMBER(6, 7, 8, 9, 10)))
-// > { success: false, errors: [ '*: Expected value to be one of the numbers: [6,7,8,9,10]' ] }
+// > {
+// >      success: false,
+// >      errors: [ '*: Expected value to be one of the numbers: [6,7,8,9,10]' ],
+// >      data: undefined
+// > }
 ```
 
 ### Validating a boolean with `BOOLEAN()`
@@ -148,16 +173,24 @@ Type      | Description
 import { validate, BOOLEAN } from "validate-any"
 
 console.log(validate(true, BOOLEAN()))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: true }
 
 console.log(validate("string", BOOLEAN()))
-// > { success: false, errors: [ '*: Expected value to be of type: boolean' ] }
+// > {
+// >      success: false,
+// >      errors: [ '*: Expected value to be of type: boolean' ],
+// >      data: undefined
+// > }
 
 console.log(validate(true, BOOLEAN(true)))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: true }
 
 console.log(validate(false, BOOLEAN(true)))
-// > { success: false, errors: [ '*: Expected value to be: true' ] }
+// > {
+// >      success: false,
+// >      errors: [ '*: Expected value to be: true' ],
+// >      data: undefined
+// > }
 ```
 
 ### Validating null with `NULL()`
@@ -172,10 +205,14 @@ Type       | Description
 import { validate, NULL } from "validate-any"
 
 console.log(validate(null, NULL()))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: null }
 
 console.log(validate(undefined, NULL()))
-// > { success: false, errors: [ '*: Expected value to be: null' ] }
+// > {
+// >      success: false,
+// >      errors: [ '*: Expected value to be: null' ],
+// >      data: undefined
+// > }
 ```
 
 ### Validating undefined with `UNDEFINED()`
@@ -190,10 +227,14 @@ Type        | Description
 import { validate, UNDEFINED } from "validate-any"
 
 console.log(validate(undefined, UNDEFINED()))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: undefined }
 
 console.log(validate(null, UNDEFINED()))
-// > { success: false, errors: [ '*: Expected value to be: undefined' ] }
+// > {
+// >      success: false,
+// >      errors: [ '*: Expected value to be: undefined' ],
+// >      data: undefined
+// > }
 ```
 
 ### Validating a list with `LIST()`
@@ -209,23 +250,35 @@ Type             | Description
 import { validate, LIST, STRING, NUMBER } from "validate-any"
 
 console.log(validate([1, 2, 3, 4, 5], LIST()))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: [ 1, 2, 3, 4, 5 ] }
 
 console.log(validate({ property: "value" }, LIST()))
-// > { success: false, errors: [ '*: Expected value to be of type: array' ] }
+// > {
+// >      success: false,
+// >      errors: [ '*: Expected value to be of type: array' ],
+// >      data: undefined
+// > }
 
 console.log(validate(["one", "two", "three"], LIST(STRING())))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: [ "one", "two", "three" ] }
 
 console.log(validate([1, "two", 3], LIST(NUMBER())))
-// > { success: false, errors: [ '* > [1]: Expected value to be of type: number' ] }
+// > {
+// >      success: false,
+// >      errors: [ '* > [1]: Expected value to be of type: number' ],
+// >      data: undefined
+// > }
 
 console.log(validate([1, "two", []], LIST(STRING(), NUMBER(), LIST())))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: [ 1, "two", [] ] }
 // And yes we also can verify LIST() within LIST()
 
 console.log(validate([1, "two", null], LIST(STRING(), NUMBER())))
-// > { success: false, errors: [ '* > [2]: Expected value to be of type: string | number' ] }
+// > {
+// >      success: false,
+// >      errors: [ '* > [2]: Expected value to be of type: string | number' ],
+// >      data: undefined
+// > }
 
 const usernames = ["jack", "_jack", "-jack"]
 console.log(validate(usernames, LIST(STRING(/^[a-zA-Z]/)))) 
@@ -234,13 +287,14 @@ console.log(validate(usernames, LIST(STRING(/^[a-zA-Z]/))))
 // >     errors: [
 // >         '* > [1]: Expected value to be of type: /^[a-zA-Z]/',
 // >         '* > [2]: Expected value to be of type: /^[a-zA-Z]/''
-// >     ]
+// >     ],
+// >     data: undefined
 // > }
 // Not every username matched /^[a-zA-Z]/
 
 const codes = [34, 76, 92]
 console.log(validate(codes, LIST(NUMBER(34, 76, 92))))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: [ 34, 76, 92 ] }
 // Every code matched items in [34, 76, 92]
 ```
 
@@ -255,13 +309,14 @@ We can use `OBJECT()` to validate objects.
 import { validate, OBJECT } from "validate-any"
 
 console.log(validate({ property: "value" }, OBJECT()))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: { property: "value" } }
 // Since { property: "value" } is an object, validate() returned true
 
 console.log(validate({ property: "value" }, OBJECT({})))
 // > {
 // >     success: false,
-// >     errors: [ '* > name: Value has unknown property: property' ]
+// >     errors: [ '* > name: Value has unknown property: property' ],
+// >     data: undefined
 // > }
 // The rule of {} means the object must have no properties
 
@@ -269,7 +324,7 @@ console.log(validate(
     { property: "value" },
     OBJECT({ property: STRING() }
 )))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: { property: "value" } }
 // We set the OBJECT's params to an object with a property "property" and a value "value"
 // Since "value" matches STRING(), validate() returned true
 
@@ -284,7 +339,8 @@ console.log(validate({
 // >     errors: [
 // >         '*: Expected value to contain property: prop',
 // >         '*: Value has unknown property: property'
-// >     ]
+// >     ],
+// >     data: undefined
 // > }
 // Since there is no property for the type validation "prop", we got an error
 // Since there is no type validation for the property "property", we got an error
@@ -303,7 +359,11 @@ console.log(validate(
         })
     })
 ))
-// > { success: true, errors: [] }
+// > {
+// >      success: true,
+// >      errors: [],
+// >      data: { property: 'value', layer: { deepProperty: [Array] } }
+// > }
 // We can even nest OBJECT() in OBJECT()
 ```
 
@@ -327,7 +387,7 @@ console.log(validate(
     "string",
     OR(STRING(), NUMBER())
 ))
-// > { success: true, errors: [] }
+// > { success: true, errors: [], data: "string" }
 
 console.log(validate(
     "string",
@@ -335,7 +395,8 @@ console.log(validate(
 ))
 // > {
 // >     success: false,
-// >     errors: [ '*: Expected value to match at least one of the given rules: boolean | number' ]
+// >     errors: [ '*: Expected value to match at least one of the given rules: boolean | number' ],
+// >     data: undefined
 // > }
 ```
 
@@ -357,7 +418,11 @@ setup_validate_messages({
 })
 
 console.log(validate("string", NUMBER()))
-// > { success: false, errors: [`Bad type, expected number`] } 
+// > {
+// >      success: false,
+// >      errors: [`Bad type, expected number`],
+// >      data: undefined
+// > } 
 ```
 
 In the example above, `%type%` was replaced with `number` because the expected type was `number`. Below is the table of
@@ -376,8 +441,8 @@ Key                  | Changeable value | Default                               
 
 ## Using `validate_express` with Express.js
 
-You can also import the module as a middleware to be used with express. This way, you can verify the types of
-the `req.body` or `req.params`
+You can also import the module as a middleware to be used with express.
+This way, you can verify the types of the `req.body`
 before invalid types mess your code up
 
 ```ts
@@ -386,9 +451,9 @@ import { validate_express, OBJECT, STRING } from "validate-any"
 // ----snip----
 
 app.post("/body",
-    validate_express("body", OBJECT({ usnm: STRING(), pswd: STRING() })),
+    validate_express(OBJECT({ usnm: STRING(), pswd: STRING() })),
     (req, res) => {
-        const { usnm, pswd } = req.body as { usnm: string, pswd: string }
+        const { usnm, pswd } = req.body
         console.log(`Username: ${usnm}`, `Password: ${pswd}`)
         res.end()
     }
@@ -401,8 +466,7 @@ The `validate_express` takes in 2 parameters:
 
 Number | Type               | Description
 -------|--------------------|-------------
-`1`    | `"body" \| "rule"` | Can either verify the `req.body` or `req.params` object
-`2`    | `Validator`        | Rule to compare the object with
+`2`    | `Validator`        | Rule to compare the `req.body` with
 
 Because of the middleware, in Typescript you can now safely use type assertions.
 Also, now for both Typescript and Javascript, you can safely use the variables like
