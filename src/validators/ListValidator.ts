@@ -1,6 +1,6 @@
 import Reporter from "../classes/Reporter"
 import Validator from "../classes/Validator"
-import { iValidationResult, OR } from "../index"
+import { iValidationResult } from "../index"
 
 export default class ListValidator<T> extends Validator<T[]> {
 	private readonly validators: Validator<T>[]
@@ -20,11 +20,7 @@ export default class ListValidator<T> extends Validator<T[]> {
 
 	public validate(data: any, reporter: Reporter): iValidationResult<T[]> {
 		if (!Array.isArray(data)) {
-			return reporter.complain(
-				this.replaceText(Validator.not_type, {
-					type: `array`
-				})
-			)
+			return reporter.complain(Validator.WRONG_TYPE, this, data)
 		}
 
 		if (this.validators.length === 0) return this.success(data as T[])
@@ -39,7 +35,10 @@ export default class ListValidator<T> extends Validator<T[]> {
 			if (results.every(r => !r.success)) {
 				_return = {
 					success: false,
-					errors: [..._return.errors, ...results.map(r => r.errors).flat()],
+					errors: [
+						..._return.errors,
+						...results.map(r => r.errors).flat()
+					],
 					data: undefined
 				}
 			}

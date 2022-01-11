@@ -3,7 +3,7 @@ import Validator from "../classes/Validator"
 import { iValidationResult } from ".."
 
 export default class NumberValidator<T extends number> extends Validator<T> {
-	public static not_among_numbers = `Expected value to be one of the numbers: %numbers%`
+	public static NOT_AMONG_NUMBERS = `Value doesn't match anything in the defined set of numbers`
 	private readonly numbers: T[]
 
 	public constructor(numbers: T[]) {
@@ -19,19 +19,15 @@ export default class NumberValidator<T extends number> extends Validator<T> {
 
 	public validate(data: any, reporter: Reporter): iValidationResult<T> {
 		if (typeof data !== "number") {
-			return reporter.complain(
-				this.replaceText(Validator.not_type, {
-					type: `number`
-				})
-			)
+			return reporter.complain(Validator.WRONG_TYPE, this, data)
 		}
 
 		if (this.numbers.length > 0) {
 			if (!this.numbers.includes(data as T)) {
 				return reporter.complain(
-					this.replaceText(NumberValidator.not_among_numbers, {
-						numbers: this.numbers
-					})
+					NumberValidator.NOT_AMONG_NUMBERS,
+					this,
+					data
 				)
 			}
 		}

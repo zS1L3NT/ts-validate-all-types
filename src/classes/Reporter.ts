@@ -1,37 +1,39 @@
-import { iValidationResult } from ".."
+import Validator from "./Validator"
+import { iValidationError, iValidationResult } from ".."
 
 export default class Reporter {
 	private readonly stack: string[]
-	public reports: string[]
+	public reports: iValidationError[]
 	private readonly silent: boolean
 
-	public constructor(stack: string[], reports: string[], silent: boolean) {
+	public constructor(
+		stack: string[],
+		reports: iValidationError[],
+		silent: boolean
+	) {
 		this.stack = stack
 		this.reports = reports
 		this.silent = silent
 	}
 
 	public throw(message: string) {
-		let report = ""
-		for (let i = 0, il = this.stack.length; i < il; i++) {
-			if (i === 0) report += `${this.stack[i]}`
-			else report += ` > ${this.stack[i]}`
-		}
-		report += ": " + message
-
-		throw new Error(report)
+		throw new Error(this.stack.join(" > ") + ": " + message)
 	}
 
-	public complain<T>(message: string): iValidationResult<T> {
+	public complain<T>(
+		message: string,
+		validator: Validator<any>,
+		value: any
+	): iValidationResult<T> {
 		if (this.silent) return { success: false, errors: [], data: undefined }
-		let report = ""
-		for (let i = 0, il = this.stack.length; i < il; i++) {
-			if (i === 0) report += `${this.stack[i]}`
-			else report += ` > ${this.stack[i]}`
-		}
-		report += ": " + message
 
-		this.reports.push(report)
+		this.reports.push({
+			location: this.stack.join(" > "),
+			message,
+			expected: validator.formatSchema(),
+			value
+		})
+
 		return { success: false, errors: this.reports, data: undefined }
 	}
 

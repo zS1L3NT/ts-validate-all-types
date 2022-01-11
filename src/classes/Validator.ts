@@ -4,8 +4,8 @@ import { iValidationResult } from ".."
 const beautify = require("js-beautify").js
 
 export default abstract class Validator<T> {
-	public static not_type = `Expected value to be of type: %type%`
-	public static not_value = `Expected value to be: %value%`
+	public static WRONG_TYPE = `Value is not of the correct type`
+	public static WRONG_VALUE = `Value is not allowed`
 	public schema = ""
 
 	public abstract validate(
@@ -21,17 +21,6 @@ export default abstract class Validator<T> {
 	 */
 	public formatSchema(): string {
 		return beautify(this.schema, { indent_size: 4 })
-	}
-
-	public replaceText(
-		text: string,
-		object: { [property: string]: any }
-	): string {
-		for (const [key, value] of Object.entries(object)) {
-			text = text.replaceAll(`%${key}%`, value)
-		}
-
-		return text
 	}
 
 	protected success(data: T): iValidationResult<T> {

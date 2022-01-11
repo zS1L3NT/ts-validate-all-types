@@ -3,7 +3,7 @@ import Validator from "../classes/Validator"
 import { iValidationResult } from ".."
 
 export default class OrValidator<T> extends Validator<T> {
-	public static not_among_rules = `Expected value to match at least one of the given rules: %rules%`
+	public static NOT_AMONG_RULES = `Value does not match any of the validators defined`
 	private readonly validators: Validator<T>[]
 
 	public constructor(validators: Validator<T>[]) {
@@ -25,12 +25,6 @@ export default class OrValidator<T> extends Validator<T> {
 				return this.success(data as T)
 		}
 
-		return reporter.complain(
-			this.replaceText(OrValidator.not_among_rules, {
-				rules: this.validators
-					.map(validator => validator.schema)
-					.join(" | ")
-			})
-		)
+		return reporter.complain(OrValidator.NOT_AMONG_RULES, this, data)
 	}
 }

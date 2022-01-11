@@ -5,8 +5,8 @@ import { iValidationResult } from ".."
 export default class StringValidator<
 	T extends string | RegExp
 > extends Validator<T> {
-	public static not_regex_match = `Expected value to match RegExp: %regex%`
-	public static not_among_strings = `Expected value to be one of the strings: %strings%`
+	public static NO_REGEX_MATCH = `Value does not match the defined RegExp pattern`
+	public static NOT_AMONG_STRINGS = `Value doesn't match anything in the defined set of strings`
 	private readonly rules: T[]
 
 	public constructor(rules: T[]) {
@@ -16,17 +16,17 @@ export default class StringValidator<
 		if (rules.length === 0) {
 			this.schema = `string`
 		} else {
-			this.schema = rules.map(rule => rule || `""`).join(" | ")
+			this.schema = rules
+				.map(rule =>
+					rule instanceof RegExp ? rule : `"${rule}"` || `""`
+				)
+				.join(" | ")
 		}
 	}
 
 	public validate(data: any, reporter: Reporter): iValidationResult<T> {
 		if (typeof data !== "string") {
-			return reporter.complain(
-				this.replaceText(Validator.not_type, {
-					type: `string`
-				})
-			)
+			return reporter.complain(Validator.WRONG_TYPE, this, data)
 		}
 
 		if (this.rules[0] instanceof RegExp) {
@@ -36,17 +36,17 @@ export default class StringValidator<
 
 			if (!match) {
 				return reporter.complain(
-					this.replaceText(StringValidator.not_regex_match, {
-						regex: this.rules[0]
-					})
+					StringValidator.NO_REGEX_MATCH,
+					this,
+					data
 				)
 			}
 		} else if (this.rules.length > 0) {
 			if (!this.rules.includes(data as T)) {
 				return reporter.complain(
-					this.replaceText(StringValidator.not_among_strings, {
-						strings: this.rules
-					})
+					StringValidator.NOT_AMONG_STRINGS,
+					this,
+					data
 				)
 			}
 		}

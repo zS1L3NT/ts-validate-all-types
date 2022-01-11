@@ -13,6 +13,13 @@ import StringValidator from "./validators/StringValidator"
 import UNDEFINED from "./functions/UNDEFINED"
 import Validator from "./classes/Validator"
 
+type iValidationError = {
+	location: string
+	message: string
+	expected: string
+	value: any
+}
+
 /**
  * Results on how the object rule matching went
  *
@@ -20,8 +27,8 @@ import Validator from "./classes/Validator"
  * @param errors List of corrections in the data to make
  */
 type iValidationResult<T> =
-	| { success: true; errors: string[]; data: T }
-	| { success: false; errors: string[]; data: undefined }
+	| { success: true; errors: iValidationError[]; data: T }
+	| { success: false; errors: iValidationError[]; data: undefined }
 
 /**
  * Function to check the type of an expression
@@ -121,14 +128,14 @@ const setup_validate_messages = ({
 	missing_property,
 	unknown_property
 }: iSetupValidateMessages) => {
-	if (not_type) Validator.not_type = not_type
-	if (not_value) Validator.not_value = not_value
-	if (not_regex_match) StringValidator.not_regex_match = not_regex_match
-	if (not_among_strings) StringValidator.not_among_strings = not_among_strings
-	if (not_among_numbers) NumberValidator.not_among_numbers = not_among_numbers
-	if (not_among_rules) OrValidator.not_among_rules = not_among_rules
-	if (missing_property) ObjectValidator.missing_property = missing_property
-	if (unknown_property) ObjectValidator.unknown_property = unknown_property
+	if (not_type) Validator.WRONG_TYPE = not_type
+	if (not_value) Validator.WRONG_VALUE = not_value
+	if (not_regex_match) StringValidator.NO_REGEX_MATCH = not_regex_match
+	if (not_among_strings) StringValidator.NOT_AMONG_STRINGS = not_among_strings
+	if (not_among_numbers) NumberValidator.NOT_AMONG_NUMBERS = not_among_numbers
+	if (not_among_rules) OrValidator.NOT_AMONG_RULES = not_among_rules
+	if (missing_property) ObjectValidator.MISSING_PROPERTY = missing_property
+	if (unknown_property) ObjectValidator.UNKNOWN_PROPERTY = unknown_property
 }
 
 export {
@@ -143,5 +150,6 @@ export {
 	NULL,
 	UNDEFINED,
 	OR,
+	iValidationError,
 	iValidationResult
 }

@@ -124,3 +124,18 @@ assert(0, OR(NULL(), UNDEFINED()), false, 1)
 assert(0, OR(STRING("hi", "bye"), NUMBER(1, 2)), false, 1)
 console.log("Validators: or        ✅")
 // endregion
+
+console.log(
+	validate(
+		[
+			{ notes: ["cool"], settings: {} },
+			{ notes: ["cool"], settings: [] }
+		],
+		LIST(
+			OBJECT({
+				notes: LIST(),
+				settings: OBJECT({})
+			})
+		)
+	)
+)

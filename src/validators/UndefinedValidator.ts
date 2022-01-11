@@ -13,11 +13,7 @@ export default class UndefinedValidator<
 
 	public validate(data: any, reporter: Reporter): iValidationResult<T> {
 		if (data !== undefined) {
-			return reporter.complain(
-				this.replaceText(Validator.not_value, {
-					type: `undefined`
-				})
-			)
+			return reporter.complain(Validator.WRONG_VALUE, this, data)
 		}
 
 		return this.success(data)

@@ -11,11 +11,7 @@ export default class NullValidator<T extends null> extends Validator<T> {
 
 	public validate(data: any, reporter: Reporter): iValidationResult<T> {
 		if (data !== null) {
-			return reporter.complain(
-				this.replaceText(Validator.not_value, {
-					type: `null`
-				})
-			)
+			return reporter.complain(Validator.WRONG_VALUE, this, data)
 		}
 
 		return this.success(data)
