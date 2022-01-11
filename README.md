@@ -49,8 +49,23 @@ Rules can look like `STRING()` or `NUMBER()`.
 Property | Type       | Description
 ---------|------------|---------------------------------------------------------
 success  | `boolean`  | Whether the validation of the object was a success or failure. `true` if success, `false` if failure
-errors   | `string[]` | The list of corrections to make if any
+errors   | `iValidationError[]` | The list of corrections to make if any
 data     | `T`        | **The data you passed in with type annotations from the schema you passed in**
+
+### `iValidationError` is the data type for an error
+Property | Type     | Description
+---------|----------|------------
+location | `string` | Where in the object did an error occur. E.g. "* > settings > wallpaper"
+message  | `string` | Description of what the error is
+expected | `string` | The expected type of value
+value    | `T`      | The value given
+
+In the examples below, you will see in the error object I only show the error message and display a "..." after it.<br>
+This is because I don't want to display unnecessary information.<br>
+However, every single error will have all the properties defined here
+
+Also do note that the location started with a `*`.<br>
+This is the name of the root defined [here](#validate-parameters)
 
 ## Making a rule
 
@@ -68,13 +83,10 @@ console.log(validate("string", STRING()))
 console.log(validate(0, STRING()))
 // > {
 // >      success: false,
-// >      errors: [ '*: Expected value to be of type: string' ],
+// >      errors: [ { message: 'Value is not of the correct type', ... } ],
 // >      data: undefined
 // > }
 ```
-
-Notice that in the error message, the root element is called `*`
-because as mentioned earlier, if we don't pass a third parameter into the `validate()` function, it names the root `*` by default.
 
 The function `STRING` with nothing in the parameters represents a type string.
 This method can also take in items in the parameters:
@@ -96,7 +108,7 @@ console.log(validate("string", STRING()))
 console.log(validate(0, STRING()))
 // > {
 // >      success: false,
-// >      errors: [ '*: Expected value to be of type: string' ],
+// >      errors: [ { message: 'Value is not of the correct type', ... } ],
 // >      data: undefined
 // > }
 // This returned false because 0 is not a string
@@ -108,7 +120,7 @@ console.log(validate("string", STRING(/^string$/)))
 console.log(validate("string", STRING(/^something-else$/)))
 // > {
 // >      success: false,
-// >      errors: [ '*: Expected value to match RegExp: /^something-else$/' ],
+// >      errors: [ { message: 'Value does not match the defined RegExp pattern', ... } ],
 // >      data: undefined
 // > }
 // This returned false because "string" didn't match the RegExp /^something-else$/
@@ -120,11 +132,10 @@ console.log(validate("string", STRING("does", "the", "string", "match", "?")))
 console.log(validate("string", STRING("doesn't", "match"), "my-string"))
 // > {
 // >      success: false,
-// >      errors: [ `my-string: Expected value to be one of the strings: ["doesn't","match"]` ],
+// >      errors: [ { message: `Value doesn't match anything in the defined set of strings`, ... } ],
 // >      data: undefined
 // > }
 // This returns false because "string" wasn't passed into STRING() as a parameter
-// Since I passed a third parameter to the validate function, the root got renamed from * to my-string
 ```
 
 ### Validating a number with `NUMBER()`
@@ -145,7 +156,7 @@ console.log(validate(3, NUMBER()))
 console.log(validate("string", NUMBER()))
 // > {
 // >      success: false,
-// >      errors: [ '*: Expected value to be of type: number' ],
+// >      errors: [ { message: 'Value is not of the correct type', ... } ],
 // >      data: undefined
 // > }
 
@@ -155,7 +166,7 @@ console.log(validate(3, NUMBER(1, 2, 3, 4, 5)))
 console.log(validate(3, NUMBER(6, 7, 8, 9, 10)))
 // > {
 // >      success: false,
-// >      errors: [ '*: Expected value to be one of the numbers: [6,7,8,9,10]' ],
+// >      errors: [ { message: 'Value doesn't match anything in the defined set of numbers', ... } ],
 // >      data: undefined
 // > }
 ```
@@ -178,7 +189,7 @@ console.log(validate(true, BOOLEAN()))
 console.log(validate("string", BOOLEAN()))
 // > {
 // >      success: false,
-// >      errors: [ '*: Expected value to be of type: boolean' ],
+// >      errors: [ { message: 'Value is not of the correct type', ... } ],
 // >      data: undefined
 // > }
 
@@ -188,7 +199,7 @@ console.log(validate(true, BOOLEAN(true)))
 console.log(validate(false, BOOLEAN(true)))
 // > {
 // >      success: false,
-// >      errors: [ '*: Expected value to be: true' ],
+// >      errors: [ { message: 'Value is not allowed', ... } ],
 // >      data: undefined
 // > }
 ```
@@ -210,7 +221,7 @@ console.log(validate(null, NULL()))
 console.log(validate(undefined, NULL()))
 // > {
 // >      success: false,
-// >      errors: [ '*: Expected value to be: null' ],
+// >      errors: [ { message: 'Value is not allowed', ... } ],
 // >      data: undefined
 // > }
 ```
@@ -232,7 +243,7 @@ console.log(validate(undefined, UNDEFINED()))
 console.log(validate(null, UNDEFINED()))
 // > {
 // >      success: false,
-// >      errors: [ '*: Expected value to be: undefined' ],
+// >      errors: [ { message: 'Value is not allowed', ... } ],
 // >      data: undefined
 // > }
 ```
@@ -255,7 +266,7 @@ console.log(validate([1, 2, 3, 4, 5], LIST()))
 console.log(validate({ property: "value" }, LIST()))
 // > {
 // >      success: false,
-// >      errors: [ '*: Expected value to be of type: array' ],
+// >      errors: [ { message: 'Value is not of the correct type', ... } ],
 // >      data: undefined
 // > }
 
@@ -265,7 +276,7 @@ console.log(validate(["one", "two", "three"], LIST(STRING())))
 console.log(validate([1, "two", 3], LIST(NUMBER())))
 // > {
 // >      success: false,
-// >      errors: [ '* > [1]: Expected value to be of type: number' ],
+// >      errors: [ { message: 'Value is not of the correct type', ... } ],
 // >      data: undefined
 // > }
 
@@ -276,17 +287,17 @@ console.log(validate([1, "two", []], LIST(STRING(), NUMBER(), LIST())))
 console.log(validate([1, "two", null], LIST(STRING(), NUMBER())))
 // > {
 // >      success: false,
-// >      errors: [ '* > [2]: Expected value to be of type: string | number' ],
+// >      errors: [ { message: 'Value is not of the correct type', ... } ],
 // >      data: undefined
 // > }
 
 const usernames = ["jack", "_jack", "-jack"]
-console.log(validate(usernames, LIST(STRING(/^[a-zA-Z]/)))) 
+console.log(validate(usernames, LIST(STRING(/^[a-zA-Z]/))))
 // > {
 // >     success: false,
 // >     errors: [
-// >         '* > [1]: Expected value to be of type: /^[a-zA-Z]/',
-// >         '* > [2]: Expected value to be of type: /^[a-zA-Z]/''
+// >         { message: 'Value is not of the correct type', ... },
+// >         { message: 'Value is not of the correct type', ... }
 // >     ],
 // >     data: undefined
 // > }
@@ -315,7 +326,7 @@ console.log(validate({ property: "value" }, OBJECT()))
 console.log(validate({ property: "value" }, OBJECT({})))
 // > {
 // >     success: false,
-// >     errors: [ '* > name: Value has unknown property: property' ],
+// >     errors: [ { message: 'Object has unknown property which is defined', ... } ],
 // >     data: undefined
 // > }
 // The rule of {} means the object must have no properties
@@ -337,8 +348,8 @@ console.log(validate({
 // > {
 // >     success: false,
 // >     errors: [
-// >         '*: Expected value to contain property: prop',
-// >         '*: Value has unknown property: property'
+// >         { message: 'Object requires this property but is missing', ... },
+// >         { message: 'Object has unknown property which is defined', ... }
 // >     ],
 // >     data: undefined
 // > }
@@ -380,7 +391,7 @@ Type             | Description
 import { validate, OR, STRING, NUMBER, BOOLEAN } from "validate-any"
 
 console.log(validate("string", OR()))
-// > Error: *: Expected developer to provide at least 1 rule for the OR operation
+// > Error: Expected developer to provide at least 1 rule for the OR operation
 // An OR operation only works with at least one input
 
 console.log(validate(
@@ -395,49 +406,10 @@ console.log(validate(
 ))
 // > {
 // >     success: false,
-// >     errors: [ '*: Expected value to match at least one of the given rules: boolean | number' ],
+// >     errors: [ { message: 'Value does not match any of the validators defined', ... } ],
 // >     data: undefined
 // > }
 ```
-
-
-## Custom error messages
-
-You may not like the default error messages we provide you when a patter matching fails. Because of this, there is a
-function to set up your own custom error messages to your own liking.
-
-Error messages can be very specific to which exact value was validated wrongly. Because of this, this package takes the
-default error template and replaces specified parts of the message with custom values. Here's what I mean:
-
-```ts
-import { NUMBER, setup_validate_messages, validate } from "validate-any"
-
-// Call this function this way to set up the new error messages
-setup_validate_messages({
-    not_type: `Bad type, expected %type%`
-})
-
-console.log(validate("string", NUMBER()))
-// > {
-// >      success: false,
-// >      errors: [`Bad type, expected number`],
-// >      data: undefined
-// > } 
-```
-
-In the example above, `%type%` was replaced with `number` because the expected type was `number`. Below is the table of
-all the possible error messages you could change
-
-Key                  | Changeable value | Default                                                              | Description
----------------------|------------------|----------------------------------------------------------------------|------------
-`not_type`           | `%type%`         | `"Expected value to be of type: %type%"`                             | Used when a type is not as defined
-`not_value`          | `%value%`        | `"Expected value to be: %value%"`                                    | Used when a value is not as defined
-`not_regex_match`    | `%regex%`        | `"Expected value to match RegExp: %regex%"`                          | Used when a string doesn't match the regex defined
-`not_among_strings`  | `%strings%`      | `"Expected value to be one of the strings: %strings%"`               | Used when a string is not among the list of strings defined
-`not_among_numbers`  | `%numbers%`      | `"Expected value to be one of the numbers: %numbers%"`               | Used when a number is not among the list of numbers defined
-`not_among_rules`    | `%rules%`        | `"Expected value to match at least one of the given rules: %rules%"` | Used when a value doesn't match any rule the list of rules defined
-`missing_property`   | `%property%`     | `"Expected value to contain property: %property%"`                   | Used when an object is missing a property defined
-`unknown_property`   | `%property%`     | `"Value has unknown property: %property%"`                           | Used when an object has an property not defined
 
 ## Using `validate_express` with Express.js
 
