@@ -411,34 +411,41 @@ console.log(validate(
 // > }
 ```
 
-## Using `validate_express` with Express.js
+## Using `withValidBody` with a Express or Next
 
-You can also import the module as a middleware to be used with express.
-This way, you can verify the types of the `req.body`
-before invalid types mess your code up
+You can also import the module as a middleware to be used with Express or Next.
+This way, you can verify the types of the `req.body` before invalid types mess your code up
 
 ```ts
-import { validate_express, OBJECT, STRING } from "validate-any"
+import { OBJECT, STRING, withValidBody } from "validate-any"
 
-// ----snip----
-
-app.post("/body",
-    validate_express(OBJECT({ usnm: STRING(), pswd: STRING() })),
-    (req, res) => {
-        const { usnm, pswd } = req.body
-        console.log(`Username: ${usnm}`, `Password: ${pswd}`)
-        res.end()
-    }
+// Express
+app.post(
+	"/body",
+	withValidBody(OBJECT({ usnm: STRING(), pswd: STRING() }), (req, res) => {
+		const { usnm, pswd } = req.body
+		console.log(`Username: ${usnm}`, `Password: ${pswd}`)
+		res.end()
+	})
 )
 
-// ----snip----
+// Next
+export default withValidBody(
+	OBJECT({ usnm: STRING(), pswd: STRING() }),
+	(req, res) => {
+		const { usnm, pswd } = req.body
+		console.log(`Username: ${usnm}`, `Password: ${pswd}`)
+		res.end()
+	}
+)
 ```
 
-The `validate_express` takes in 2 parameters:
+The `withValidBody` takes in 2 parameters:
 
 Number | Type               | Description
 -------|--------------------|-------------
-`2`    | `Validator`        | Rule to compare the `req.body` with
+`1`    | `Validator`        | Rule to compare the `req.body` with
+`2`    | `handler`          | Handler to handle the request if it works
 
 Because of the middleware, in Typescript you can now safely use type assertions.
 Also, now for both Typescript and Javascript, you can safely use the variables like
