@@ -37,32 +37,29 @@ export default class ObjectValidator<T> extends Validator<T> {
 
 		if (!this.rule_object) return this.success(data)
 
-		let _return = this.success(data)
-		for (const [rule_key, rule_value] of Object.entries(this.rule_object)) {
-			const stacked_reporter = reporter.setStack(rule_key)
-			const rule_rejects_undefined = !rule_value.validate(
+		let result = this.success(data)
+		for (const [ruleKey, ruleValue] of Object.entries(this.rule_object)) {
+			const stackedReporter = reporter.setStack(ruleKey)
+			const ruleRejectsUndefined = !ruleValue.validate(
 				undefined,
-				stacked_reporter.silence()
+				stackedReporter.silence()
 			).success
 
-			if (
-				!Object.keys(data).includes(rule_key) &&
-				rule_rejects_undefined
-			) {
-				_return = stacked_reporter.complain(
+			if (!Object.keys(data).includes(ruleKey) && ruleRejectsUndefined) {
+				result = stackedReporter.complain(
 					ObjectValidator.MISSING_PROPERTY,
-					rule_value,
+					ruleValue,
 					data
 				)
 			}
 		}
 
-		for (const [data_key, data_value] of Object.entries(data)) {
-			const stacked_reporter = reporter.setStack(data_key)
-			const rule = this.rule_object[data_key]
+		for (const [dataKey, dataValue] of Object.entries(data)) {
+			const stackedReporter = reporter.setStack(dataKey)
+			const rule = this.rule_object[dataKey]
 
 			if (!rule) {
-				_return = stacked_reporter.complain(
+				result = stackedReporter.complain(
 					ObjectValidator.UNKNOWN_PROPERTY,
 					new UndefinedValidator(),
 					data
@@ -70,10 +67,8 @@ export default class ObjectValidator<T> extends Validator<T> {
 				continue
 			}
 
-			if (
-				!rule.validate(data_value, stacked_reporter.silence()).success
-			) {
-				_return = stacked_reporter.complain(
+			if (!rule.validate(dataValue, stackedReporter.silence()).success) {
+				result = stackedReporter.complain(
 					Validator.WRONG_TYPE,
 					rule,
 					data
@@ -81,6 +76,6 @@ export default class ObjectValidator<T> extends Validator<T> {
 			}
 		}
 
-		return _return
+		return result
 	}
 }

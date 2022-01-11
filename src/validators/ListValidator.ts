@@ -25,18 +25,18 @@ export default class ListValidator<T> extends Validator<T[]> {
 
 		if (this.validators.length === 0) return this.success(data as T[])
 
-		let _return = this.success(data as T[])
+		let result = this.success(data as T[])
 		for (const i in Array(data.length).fill(0)) {
-			const stacked_reporter = reporter.setStack(`[${i}]`)
+			const stackedReporter = reporter.setStack(`[${i}]`)
 
 			const results = this.validators.map(validator =>
-				validator.validate(data[i], stacked_reporter)
+				validator.validate(data[i], stackedReporter)
 			)
 			if (results.every(r => !r.success)) {
-				_return = {
+				result = {
 					success: false,
 					errors: [
-						..._return.errors,
+						...result.errors,
 						...results.map(r => r.errors).flat()
 					],
 					data: undefined
@@ -44,6 +44,6 @@ export default class ListValidator<T> extends Validator<T[]> {
 			}
 		}
 
-		return _return
+		return result
 	}
 }
