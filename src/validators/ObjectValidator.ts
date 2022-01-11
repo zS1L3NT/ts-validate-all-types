@@ -19,7 +19,7 @@ export default class ObjectValidator<T> extends Validator<T> {
 				this.schema = `{`
 				for (const rule_key in rule_object) {
 					const rule_value = rule_object[rule_key]
-					this.schema += `${rule_key}:${rule_value.schema},`
+					this.schema += `${rule_key}:${rule_value!.schema},`
 				}
 				this.schema += `}`
 			}
