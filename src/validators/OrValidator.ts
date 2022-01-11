@@ -1,4 +1,4 @@
-import Reporter from "../classes/Reporter"
+import Locator from "../classes/Locator"
 import Validator from "../classes/Validator"
 import { iValidationResult } from ".."
 
@@ -13,18 +13,19 @@ export default class OrValidator<T> extends Validator<T> {
 		this.schema = validators.map(validator => validator.schema).join(" | ")
 	}
 
-	public validate(data: any, reporter: Reporter): iValidationResult<T> {
+	public validate(data: any, locator: Locator): iValidationResult<T> {
 		if (this.validators.length < 1) {
-			reporter.throw(
+			this.throw(
+				locator,
 				`Expected developer to provide at least 1 rule for the OR operation`
 			)
 		}
 
 		for (const validator of this.validators) {
-			if (validator.validate(data, reporter.silence()).success)
+			if (validator.validate(data, locator).success)
 				return this.success(data as T)
 		}
 
-		return reporter.complain(OrValidator.NOT_AMONG_RULES, this, data)
+		return this.failure(locator, OrValidator.NOT_AMONG_RULES, this, data)
 	}
 }

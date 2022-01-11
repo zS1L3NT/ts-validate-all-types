@@ -1,5 +1,6 @@
 import BOOLEAN from "./functions/BOOLEAN"
 import LIST from "./functions/LIST"
+import Locator from "./classes/Locator"
 import NULL from "./functions/NULL"
 import NUMBER from "./functions/NUMBER"
 import NumberValidator from "./validators/NumberValidator"
@@ -7,7 +8,6 @@ import OBJECT from "./functions/OBJECT"
 import ObjectValidator from "./validators/ObjectValidator"
 import OR from "./functions/OR"
 import OrValidator from "./validators/OrValidator"
-import Reporter from "./classes/Reporter"
 import STRING from "./functions/STRING"
 import StringValidator from "./validators/StringValidator"
 import UNDEFINED from "./functions/UNDEFINED"
@@ -43,16 +43,13 @@ const validate = <T>(
 	rule: Validator<T>,
 	name: string = "*"
 ): iValidationResult<T> => {
-	const reporter = new Reporter([name], [], false)
-	const result = rule.validate(data, reporter)
+	const locator = new Locator([name])
+	const result = rule.validate(data, locator)
 
-	if (result.success === reporter.reports.length > 0) {
+	if (result.success === result.errors.length > 0) {
 		console.warn(
 			"Error with typechecking. Create an issue on https://github.com/zS1L3NT/ts-npm-validate-any with the PATTERN AND the data below",
-			{
-				data,
-				errors: reporter.reports
-			}
+			result.errors
 		)
 	}
 

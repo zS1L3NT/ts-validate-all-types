@@ -1,4 +1,4 @@
-import Reporter from "../classes/Reporter"
+import Locator from "../classes/Locator"
 import Validator from "../classes/Validator"
 import { iValidationResult } from ".."
 
@@ -16,13 +16,13 @@ export default class BooleanValidator<T extends boolean> extends Validator<T> {
 		}
 	}
 
-	public validate(data: any, reporter: Reporter): iValidationResult<T> {
+	public validate(data: any, locator: Locator): iValidationResult<T> {
 		if (typeof data !== "boolean") {
-			return reporter.complain(Validator.WRONG_TYPE, this, data)
+			return this.failure(locator, Validator.WRONG_TYPE, this, data)
 		}
 
 		if (this.boolean !== undefined && data !== this.boolean) {
-			return reporter.complain(Validator.WRONG_VALUE, this, data)
+			return this.failure(locator, Validator.WRONG_VALUE, this, data)
 		}
 
 		return this.success(data as T)

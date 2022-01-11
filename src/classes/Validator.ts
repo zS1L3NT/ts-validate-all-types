@@ -1,5 +1,5 @@
-import Reporter from "./Reporter"
-import { iValidationResult } from ".."
+import Locator from "./Locator"
+import { iValidationError, iValidationResult } from ".."
 
 const beautify = require("js-beautify").js
 
@@ -8,10 +8,7 @@ export default abstract class Validator<T> {
 	public static WRONG_VALUE = `Value is not allowed`
 	public schema = ""
 
-	public abstract validate(
-		data: any,
-		reporter: Reporter
-	): iValidationResult<T>
+	public abstract validate(data: any, locator: Locator): iValidationResult<T>
 
 	/**
 	 * A rough gauge of what the schema looks like
@@ -29,5 +26,29 @@ export default abstract class Validator<T> {
 			errors: [],
 			data: data as T
 		}
+	}
+
+	protected failure(
+		locator: Locator,
+		message: string,
+		validator: Validator<any>,
+		data: any
+	): iValidationResult<T> {
+		return {
+			success: false,
+			errors: [
+				{
+					location: locator.getLocation(),
+					message,
+					expected: validator.formatSchema(),
+					value: data
+				}
+			],
+			data: undefined
+		}
+	}
+
+	protected throw(locator: Locator, message: string) {
+		throw new Error(locator.getLocation() + ": " + message)
 	}
 }

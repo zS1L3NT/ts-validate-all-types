@@ -1,4 +1,4 @@
-import Reporter from "../classes/Reporter"
+import Locator from "../classes/Locator"
 import Validator from "../classes/Validator"
 import { iValidationResult } from ".."
 
@@ -24,9 +24,9 @@ export default class StringValidator<
 		}
 	}
 
-	public validate(data: any, reporter: Reporter): iValidationResult<T> {
+	public validate(data: any, locator: Locator): iValidationResult<T> {
 		if (typeof data !== "string") {
-			return reporter.complain(Validator.WRONG_TYPE, this, data)
+			return this.failure(locator, Validator.WRONG_TYPE, this, data)
 		}
 
 		if (this.rules[0] instanceof RegExp) {
@@ -35,7 +35,8 @@ export default class StringValidator<
 				: false
 
 			if (!match) {
-				return reporter.complain(
+				return this.failure(
+					locator,
 					StringValidator.NO_REGEX_MATCH,
 					this,
 					data
@@ -43,7 +44,8 @@ export default class StringValidator<
 			}
 		} else if (this.rules.length > 0) {
 			if (!this.rules.includes(data as T)) {
-				return reporter.complain(
+				return this.failure(
+					locator,
 					StringValidator.NOT_AMONG_STRINGS,
 					this,
 					data

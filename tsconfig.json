@@ -16,9 +16,8 @@
 		"strictFunctionTypes": true,
 		"declaration": true,
 		"outDir": "build",
-		"rootDir": "src"
+		"rootDir": "src",
+		"sourceMap": true
 	},
-	"exclude": [
-		"**/*.test.*"
-	]
+	"exclude": ["**/*.test.*"]
 }

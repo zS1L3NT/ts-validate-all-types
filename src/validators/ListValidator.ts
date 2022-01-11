@@ -1,4 +1,4 @@
-import Reporter from "../classes/Reporter"
+import Locator from "../classes/Locator"
 import Validator from "../classes/Validator"
 import { iValidationResult } from "../index"
 
@@ -18,19 +18,19 @@ export default class ListValidator<T> extends Validator<T[]> {
 		}
 	}
 
-	public validate(data: any, reporter: Reporter): iValidationResult<T[]> {
+	public validate(data: any, locator: Locator): iValidationResult<T[]> {
 		if (!Array.isArray(data)) {
-			return reporter.complain(Validator.WRONG_TYPE, this, data)
+			return this.failure(locator, Validator.WRONG_TYPE, this, data)
 		}
 
 		if (this.validators.length === 0) return this.success(data as T[])
 
 		let result = this.success(data as T[])
 		for (const i in Array(data.length).fill(0)) {
-			const stackedReporter = reporter.setStack(`[${i}]`)
+			const traversedLocator = locator.traverse(`[${i}]`)
 
 			const results = this.validators.map(validator =>
-				validator.validate(data[i], stackedReporter)
+				validator.validate(data[i], traversedLocator)
 			)
 			if (results.every(r => !r.success)) {
 				result = {

@@ -1,4 +1,4 @@
-import Reporter from "../classes/Reporter"
+import Locator from "../classes/Locator"
 import Validator from "../classes/Validator"
 import { iValidationResult } from ".."
 
@@ -17,14 +17,15 @@ export default class NumberValidator<T extends number> extends Validator<T> {
 		}
 	}
 
-	public validate(data: any, reporter: Reporter): iValidationResult<T> {
+	public validate(data: any, locator: Locator): iValidationResult<T> {
 		if (typeof data !== "number") {
-			return reporter.complain(Validator.WRONG_TYPE, this, data)
+			return this.failure(locator, Validator.WRONG_TYPE, this, data)
 		}
 
 		if (this.numbers.length > 0) {
 			if (!this.numbers.includes(data as T)) {
-				return reporter.complain(
+				return this.failure(
+					locator,
 					NumberValidator.NOT_AMONG_NUMBERS,
 					this,
 					data

@@ -1,4 +1,4 @@
-import Reporter from "../classes/Reporter"
+import Locator from "../classes/Locator"
 import Validator from "../classes/Validator"
 import { iValidationResult } from ".."
 
@@ -11,9 +11,9 @@ export default class UndefinedValidator<
 		this.schema = `undefined`
 	}
 
-	public validate(data: any, reporter: Reporter): iValidationResult<T> {
+	public validate(data: any, locator: Locator): iValidationResult<T> {
 		if (data !== undefined) {
-			return reporter.complain(Validator.WRONG_VALUE, this, data)
+			return this.failure(locator, Validator.WRONG_VALUE, this, data)
 		}
 
 		return this.success(data)

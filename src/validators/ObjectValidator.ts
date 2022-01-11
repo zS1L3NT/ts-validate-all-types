@@ -1,4 +1,4 @@
-import Reporter from "../classes/Reporter"
+import Locator from "../classes/Locator"
 import UndefinedValidator from "./UndefinedValidator"
 import Validator from "../classes/Validator"
 import { iValidationResult } from ".."
@@ -30,49 +30,73 @@ export default class ObjectValidator<T> extends Validator<T> {
 		}
 	}
 
-	public validate(data: any, reporter: Reporter): iValidationResult<T> {
+	public validate(data: any, locator: Locator): iValidationResult<T> {
 		if (typeof data !== "object" || Array.isArray(data) || data === null) {
-			return reporter.complain(Validator.WRONG_TYPE, this, data)
+			return this.failure(locator, Validator.WRONG_TYPE, this, data)
 		}
 
 		if (!this.rule_object) return this.success(data)
 
 		let result = this.success(data)
 		for (const [ruleKey, ruleValue] of Object.entries(this.rule_object)) {
-			const stackedReporter = reporter.setStack(ruleKey)
+			const traversedLocator = locator.traverse(ruleKey)
 			const ruleRejectsUndefined = !ruleValue.validate(
 				undefined,
-				stackedReporter.silence()
+				traversedLocator
 			).success
 
 			if (!Object.keys(data).includes(ruleKey) && ruleRejectsUndefined) {
-				result = stackedReporter.complain(
-					ObjectValidator.MISSING_PROPERTY,
-					ruleValue,
-					data
-				)
+				result = {
+					success: false,
+					errors: [
+						...result.errors,
+						...this.failure(
+							traversedLocator,
+							ObjectValidator.MISSING_PROPERTY,
+							ruleValue,
+							data
+						).errors
+					],
+					data: undefined
+				}
 			}
 		}
 
 		for (const [dataKey, dataValue] of Object.entries(data)) {
-			const stackedReporter = reporter.setStack(dataKey)
+			const traversedLocator = locator.traverse(dataKey)
 			const rule = this.rule_object[dataKey]
 
 			if (!rule) {
-				result = stackedReporter.complain(
-					ObjectValidator.UNKNOWN_PROPERTY,
-					new UndefinedValidator(),
-					data
-				)
+				result = {
+					success: false,
+					errors: [
+						...result.errors,
+						...this.failure(
+							traversedLocator,
+							ObjectValidator.UNKNOWN_PROPERTY,
+							new UndefinedValidator(),
+							data
+						).errors
+					],
+					data: undefined
+				}
 				continue
 			}
 
-			if (!rule.validate(dataValue, stackedReporter.silence()).success) {
-				result = stackedReporter.complain(
-					Validator.WRONG_TYPE,
-					rule,
-					data
-				)
+			if (!rule.validate(dataValue, traversedLocator).success) {
+				result = {
+					success: false,
+					errors: [
+						...result.errors,
+						...this.failure(
+							traversedLocator,
+							Validator.WRONG_TYPE,
+							rule,
+							data
+						).errors
+					],
+					data: undefined
+				}
 			}
 		}
 

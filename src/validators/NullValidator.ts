@@ -1,4 +1,4 @@
-import Reporter from "../classes/Reporter"
+import Locator from "../classes/Locator"
 import Validator from "../classes/Validator"
 import { iValidationResult } from ".."
 
@@ -9,9 +9,9 @@ export default class NullValidator<T extends null> extends Validator<T> {
 		this.schema = `null`
 	}
 
-	public validate(data: any, reporter: Reporter): iValidationResult<T> {
+	public validate(data: any, locator: Locator): iValidationResult<T> {
 		if (data !== null) {
-			return reporter.complain(Validator.WRONG_VALUE, this, data)
+			return this.failure(locator, Validator.WRONG_VALUE, this, data)
 		}
 
 		return this.success(data)
