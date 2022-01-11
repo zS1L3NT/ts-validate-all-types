@@ -20,7 +20,7 @@ import Validator from "./classes/Validator"
  * @param errors List of corrections in the data to make
  */
 type iValidationResult<T> =
-	| { success: true; errors: []; data: T }
+	| { success: true; errors: string[]; data: T }
 	| { success: false; errors: string[]; data: undefined }
 
 /**

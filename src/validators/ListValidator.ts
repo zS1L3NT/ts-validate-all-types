@@ -32,16 +32,16 @@ export default class ListValidator<T> extends Validator<T[]> {
 		let _return = this.success(data as T[])
 		for (const i in Array(data.length).fill(0)) {
 			const stacked_reporter = reporter.setStack(`[${i}]`)
-			const validator = OR(...this.validators)
 
-			if (
-				!validator.validate(data[i], stacked_reporter.silence()).success
-			) {
-				_return = stacked_reporter.complain(
-					this.replaceText(Validator.not_type, {
-						type: validator.schema
-					})
-				)
+			const results = this.validators.map(validator =>
+				validator.validate(data[i], stacked_reporter)
+			)
+			if (results.every(r => !r.success)) {
+				_return = {
+					success: false,
+					errors: [..._return.errors, ...results.map(r => r.errors).flat()],
+					data: undefined
+				}
 			}
 		}
 
