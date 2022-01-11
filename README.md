@@ -19,6 +19,7 @@ or
 > $ yarn add validate-any
 
 then import the module like this:
+
 ```ts
 // Typescript
 import { validate } from "validate-any"
@@ -29,36 +30,39 @@ const { validate } = require("validate-any")
 
 Typescript typings are automatically included so there's no need to install anything like `@types/validate-any` !
 
-
 ## How the `validate` function works
+
 The `validate` object we imported earlier is a function which can take 2 (3: optional) parameters.
 
 ### `validate` parameters:
-Number | Type       | Description
--------|------------|------------------------------------------------------
-`1`    | `any`      | The object we are checking
-`2`    | `Validator`| A specific rule to compare the object to (more about this later)
-`3`    | `string?`  | The name of the root object when logs display errors. Defaults to `*` as root
---------------------------------------------------------------------------
+
+| Number | Type        | Description                                                                   |
+| ------ | ----------- | ----------------------------------------------------------------------------- |
+| `1`    | `any`       | The object we are checking                                                    |
+| `2`    | `Validator` | A specific rule to compare the object to (more about this later)              |
+| `3`    | `string?`   | The name of the root object when logs display errors. Defaults to `*` as root |
+
+---
 
 The type `Validator` is something you don't need to worry about. Just know that it is the Typescript type for a rule.
 Rules can look like `STRING()` or `NUMBER()`.
 
 ### `validate` returns an object containing:
 
-Property | Type       | Description
----------|------------|---------------------------------------------------------
-success  | `boolean`  | Whether the validation of the object was a success or failure. `true` if success, `false` if failure
-errors   | `iValidationError[]` | The list of corrections to make if any
-data     | `T`        | **The data you passed in with type annotations from the schema you passed in**
+| Property | Type                 | Description                                                                                          |
+| -------- | -------------------- | ---------------------------------------------------------------------------------------------------- |
+| success  | `boolean`            | Whether the validation of the object was a success or failure. `true` if success, `false` if failure |
+| errors   | `iValidationError[]` | The list of corrections to make if any                                                               |
+| data     | `T`                  | **The data you passed in with type annotations from the schema you passed in**                       |
 
 ### `iValidationError` is the data type for an error
-Property | Type     | Description
----------|----------|------------
-location | `string` | Where in the object did an error occur. E.g. "* > settings > wallpaper"
-message  | `string` | Description of what the error is
-expected | `string` | The expected type of value
-value    | `T`      | The value given
+
+| Property | Type     | Description                                                              |
+| -------- | -------- | ------------------------------------------------------------------------ |
+| location | `string` | Where in the object did an error occur. E.g. "\* > settings > wallpaper" |
+| message  | `string` | Description of what the error is                                         |
+| expected | `string` | The expected type of value                                               |
+| value    | `T`      | The value given                                                          |
 
 In the examples below, you will see in the error object I only show the error message and display a "..." after it.<br>
 This is because I don't want to display unnecessary information.<br>
@@ -91,11 +95,12 @@ console.log(validate(0, STRING()))
 The function `STRING` with nothing in the parameters represents a type string.
 This method can also take in items in the parameters:
 
-Type          | Description
---------------|------------------------------------------------------
-`(empty)`     | validates if the input is a string
-`RegExp`      | validates if the input is a string and matches the RegExp
-`...string[]` | validates if the input is a string and matches any of the given strings
+| Type          | Description                                                             |
+| ------------- | ----------------------------------------------------------------------- |
+| `(empty)`     | validates if the input is a string                                      |
+| `RegExp`      | validates if the input is a string and matches the RegExp               |
+| `...string[]` | validates if the input is a string and matches any of the given strings |
+
 <br>
 
 ```ts
@@ -139,12 +144,14 @@ console.log(validate("string", STRING("doesn't", "match"), "my-string"))
 ```
 
 ### Validating a number with `NUMBER()`
+
 Because `STRING()` validates strings, it's obvious that `NUMBER()` validates numbers. `NUMBER()` works the same was as `STRING()` except allows a different set of parameters:
 
-Type          | Description
---------------|------------------------------------------------------
-`(empty)`     | validates if the input is a number
-`...number[]` | validates if the input is a number and matches any of the given numbers
+| Type          | Description                                                             |
+| ------------- | ----------------------------------------------------------------------- |
+| `(empty)`     | validates if the input is a number                                      |
+| `...number[]` | validates if the input is a number and matches any of the given numbers |
+
 <br>
 
 ```ts
@@ -172,12 +179,14 @@ console.log(validate(3, NUMBER(6, 7, 8, 9, 10)))
 ```
 
 ### Validating a boolean with `BOOLEAN()`
+
 `BOOLEAN()` allows comparison of booleans only
 
-Type      | Description
-----------|---------------------------------------------------------------
-`(empty)` | validates if the input is a boolean
-`boolean` | validates if the input is a boolean and if the booleans are equal
+| Type      | Description                                                       |
+| --------- | ----------------------------------------------------------------- |
+| `(empty)` | validates if the input is a boolean                               |
+| `boolean` | validates if the input is a boolean and if the booleans are equal |
+
 <br>
 
 ```ts
@@ -205,11 +214,13 @@ console.log(validate(false, BOOLEAN(true)))
 ```
 
 ### Validating null with `NULL()`
+
 `NULL()` doesn't allow variations of the parameters
 
-Type       | Description
------------|------------------------------------------------------
-`(empty)`  | validates if the input is a null
+| Type      | Description                      |
+| --------- | -------------------------------- |
+| `(empty)` | validates if the input is a null |
+
 <br>
 
 ```ts
@@ -227,11 +238,13 @@ console.log(validate(undefined, NULL()))
 ```
 
 ### Validating undefined with `UNDEFINED()`
+
 Just like `NULL()`, `UNDEFINED()` doesn't allow variations of the parameters
 
-Type        | Description
-------------|------------------------------------------------------
-(empty)     | validates if the input is a undefined
+| Type    | Description                           |
+| ------- | ------------------------------------- |
+| (empty) | validates if the input is a undefined |
+
 <br>
 
 ```ts
@@ -249,12 +262,14 @@ console.log(validate(null, UNDEFINED()))
 ```
 
 ### Validating a list with `LIST()`
+
 This one's a bit more complicated. `LIST()` allows a few sets of parameters:
 
-Type             | Description
------------------|------------------------------------------------------
-`(empty)`        | validates if the input is a list
-`...Validator[]` | validates if the input is a list and checks if all items in the list match at least 1 of the Rules stated
+| Type             | Description                                                                                               |
+| ---------------- | --------------------------------------------------------------------------------------------------------- |
+| `(empty)`        | validates if the input is a list                                                                          |
+| `...Validator[]` | validates if the input is a list and checks if all items in the list match at least 1 of the Rules stated |
+
 <br>
 
 ```ts
@@ -331,20 +346,21 @@ console.log(validate({ property: "value" }, OBJECT({})))
 // > }
 // The rule of {} means the object must have no properties
 
-console.log(validate(
-    { property: "value" },
-    OBJECT({ property: STRING() }
-)))
+console.log(validate({ property: "value" }, OBJECT({ property: STRING() })))
 // > { success: true, errors: [], data: { property: "value" } }
 // We set the OBJECT's params to an object with a property "property" and a value "value"
 // Since "value" matches STRING(), validate() returned true
 
-console.log(validate({
-        property: "value"
-    }, OBJECT({
-        prop: STRING()
-    })
-))
+console.log(
+	validate(
+		{
+			property: "value"
+		},
+		OBJECT({
+			prop: STRING()
+		})
+	)
+)
 // > {
 // >     success: false,
 // >     errors: [
@@ -356,20 +372,28 @@ console.log(validate({
 // Since there is no property for the type validation "prop", we got an error
 // Since there is no type validation for the property "property", we got an error
 
-console.log(validate(
-    {
-        property: "value",
-        layer: {
-            deepProperty: ["", 0, null, undefined, false]
-        }
-    },
-    OBJECT({
-        property: STRING(),
-        layer: OBJECT({
-            deepProperty: LIST(STRING(), NUMBER(0), NULL(), UNDEFINED(), BOOLEAN(false))
-        })
-    })
-))
+console.log(
+	validate(
+		{
+			property: "value",
+			layer: {
+				deepProperty: ["", 0, null, undefined, false]
+			}
+		},
+		OBJECT({
+			property: STRING(),
+			layer: OBJECT({
+				deepProperty: LIST(
+					STRING(),
+					NUMBER(0),
+					NULL(),
+					UNDEFINED(),
+					BOOLEAN(false)
+				)
+			})
+		})
+	)
+)
 // > {
 // >      success: true,
 // >      errors: [],
@@ -382,9 +406,10 @@ console.log(validate(
 
 If you want either of a few rules to match, use the `OR()` operator. This function takes multiple parameters:
 
-Type             | Description
------------------|-------------
-`...Validator[]` | A list of rules to test on the input
+| Type             | Description                          |
+| ---------------- | ------------------------------------ |
+| `...Validator[]` | A list of rules to test on the input |
+
 <br>
 
 ```ts
@@ -394,16 +419,10 @@ console.log(validate("string", OR()))
 // > Error: Expected developer to provide at least 1 rule for the OR operation
 // An OR operation only works with at least one input
 
-console.log(validate(
-    "string",
-    OR(STRING(), NUMBER())
-))
+console.log(validate("string", OR(STRING(), NUMBER())))
 // > { success: true, errors: [], data: "string" }
 
-console.log(validate(
-    "string",
-    OR(BOOLEAN(), NUMBER())
-))
+console.log(validate("string", OR(BOOLEAN(), NUMBER())))
 // > {
 // >     success: false,
 // >     errors: [ { message: 'Value does not match any of the validators defined', ... } ],
@@ -442,10 +461,10 @@ export default withValidBody(
 
 The `withValidBody` takes in 2 parameters:
 
-Number | Type               | Description
--------|--------------------|-------------
-`1`    | `Validator`        | Rule to compare the `req.body` with
-`2`    | `handler`          | Handler to handle the request if it works
+| Number | Type        | Description                               |
+| ------ | ----------- | ----------------------------------------- |
+| `1`    | `Validator` | Rule to compare the `req.body` with       |
+| `2`    | `handler`   | Handler to handle the request if it works |
 
 Because of the middleware, in Typescript you can now safely use type assertions.
 Also, now for both Typescript and Javascript, you can safely use the variables like
