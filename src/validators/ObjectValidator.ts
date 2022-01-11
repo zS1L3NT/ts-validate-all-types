@@ -4,8 +4,8 @@ import Validator from "../classes/Validator"
 import { iValidationResult } from ".."
 
 export default class ObjectValidator<T> extends Validator<T> {
-	public static MISSING_PROPERTY = `Object requires this property but is missing`
-	public static UNKNOWN_PROPERTY = `Object has unknown property which is defined`
+	public static readonly MISSING_PROPERTY = `Object requires this property but is missing`
+	public static readonly UNKNOWN_PROPERTY = `Object has unknown property which is defined`
 	private readonly rule_object?: { [property: string]: Validator<T> }
 
 	public constructor(rule_object?: { [property: string]: Validator<T> }) {

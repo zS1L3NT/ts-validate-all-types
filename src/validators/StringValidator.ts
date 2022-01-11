@@ -5,8 +5,8 @@ import { iValidationResult } from ".."
 export default class StringValidator<
 	T extends string | RegExp
 > extends Validator<T> {
-	public static NO_REGEX_MATCH = `Value does not match the defined RegExp pattern`
-	public static NOT_AMONG_STRINGS = `Value doesn't match anything in the defined set of strings`
+	public static readonly NO_REGEX_MATCH = `Value does not match the defined RegExp pattern`
+	public static readonly NOT_AMONG_STRINGS = `Value doesn't match anything in the defined set of strings`
 	private readonly rules: T[]
 
 	public constructor(rules: T[]) {

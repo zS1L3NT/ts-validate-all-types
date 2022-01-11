@@ -3,7 +3,7 @@ import Validator from "../classes/Validator"
 import { iValidationResult } from ".."
 
 export default class NumberValidator<T extends number> extends Validator<T> {
-	public static NOT_AMONG_NUMBERS = `Value doesn't match anything in the defined set of numbers`
+	public static readonly NOT_AMONG_NUMBERS = `Value doesn't match anything in the defined set of numbers`
 	private readonly numbers: T[]
 
 	public constructor(numbers: T[]) {

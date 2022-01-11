@@ -4,8 +4,8 @@ import { iValidationError, iValidationResult } from ".."
 const beautify = require("js-beautify").js
 
 export default abstract class Validator<T> {
-	public static WRONG_TYPE = `Value is not of the correct type`
-	public static WRONG_VALUE = `Value is not allowed`
+	public static readonly WRONG_TYPE = `Value is not of the correct type`
+	public static readonly WRONG_VALUE = `Value is not allowed`
 	public schema = ""
 
 	public abstract validate(data: any, locator: Locator): iValidationResult<T>

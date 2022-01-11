@@ -3,7 +3,7 @@ import Validator from "../classes/Validator"
 import { iValidationResult } from ".."
 
 export default class OrValidator<T> extends Validator<T> {
-	public static NOT_AMONG_RULES = `Value does not match any of the validators defined`
+	public static readonly NOT_AMONG_RULES = `Value does not match any of the validators defined`
 	private readonly validators: Validator<T>[]
 
 	public constructor(validators: Validator<T>[]) {
