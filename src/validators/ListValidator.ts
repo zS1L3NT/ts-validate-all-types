@@ -39,7 +39,7 @@ export default class ListValidator<T> extends Validator<T[]> {
 			) {
 				_return = stacked_reporter.complain(
 					this.replaceText(Validator.not_type, {
-						type: validator.formatSchema()
+						type: validator.schema
 					})
 				)
 			}

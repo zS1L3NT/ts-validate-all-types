@@ -75,7 +75,7 @@ export default class ObjectValidator<T> extends Validator<T> {
 			if (!rule.validate(data_value, stacked_reporter.silence()).success) {
 				_return = stacked_reporter.complain(
 					this.replaceText(Validator.not_type, {
-						type: data_key
+						type: rule.schema
 					})
 				)
 			}

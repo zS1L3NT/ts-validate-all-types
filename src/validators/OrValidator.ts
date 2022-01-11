@@ -28,7 +28,7 @@ export default class OrValidator<T> extends Validator<T> {
 		return reporter.complain(
 			this.replaceText(OrValidator.not_among_rules, {
 				rules: this.validators
-					.map(validator => validator.formatSchema())
+					.map(validator => validator.schema)
 					.join(" | ")
 			})
 		)
