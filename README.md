@@ -430,7 +430,7 @@ console.log(validate("string", OR(BOOLEAN(), NUMBER())))
 // > }
 ```
 
-## Using `withValidBody` with a Express or Next
+## Using `withValidBody` with Express or Next
 
 You can also import the module as a middleware to be used with Express or Next.
 This way, you can verify the types of the `req.body` before invalid types mess your code up
