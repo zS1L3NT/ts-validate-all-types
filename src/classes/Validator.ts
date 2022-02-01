@@ -1,7 +1,6 @@
 import Locator from "./Locator"
-import { iValidationError, iValidationResult } from ".."
-
-const beautify = require("js-beautify").js
+import { iValidationResult } from ".."
+import { js as beautify } from "js-beautify"
 
 export default abstract class Validator<T> {
 	public static readonly WRONG_TYPE = `Value is not of the correct type`
