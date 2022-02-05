@@ -4,7 +4,7 @@
 	"description": "Data Validator",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
-	"author": "zS1L3NT <zechariahtan144@gmail.com> (http://www.zectan.com)",
+	"author": "zS1L3NT <zechariahtan144@gmail.com> (https://www.zectan.com)",
 	"license": "ISC",
 	"repository": {
 		"type": "git",
@@ -17,15 +17,12 @@
 		"js-beautify": "^1.14.0"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.16.7",
-		"@babel/preset-env": "^7.16.8",
+		"@babel/core": "^7.17.0",
+		"@babel/preset-env": "^7.16.11",
 		"@babel/preset-typescript": "^7.16.7",
 		"@types/jest": "^27.4.0",
-		"@types/node": "^17.0.8",
-		"babel-jest": "^27.4.6",
-		"jest": "^27.4.7",
-		"ts-node": "^10.4.0",
-		"typescript": "^4.5.4"
+		"jest": "^27.5.0",
+		"typescript": "^4.5.5"
 	},
 	"keywords": [
 		"validate",
