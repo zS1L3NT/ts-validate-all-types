@@ -1,6 +1,7 @@
 import Validator from "../classes/Validator"
 import {
 	BOOLEAN,
+	CLASS,
 	LIST,
 	NULL,
 	NUMBER,
@@ -12,8 +13,13 @@ import {
 } from "../index"
 
 const _expect = (data: any, validator: Validator<any>) => ({
-	toBe: (errors: number) => {
-		expect(validate(data, validator).errors.length).toBe(errors)
+	toBe: (count: number) => {
+		const { errors } = validate(data, validator)
+		if (errors.length > 0 && errors.length !== count) {
+			console.log(errors)
+		}
+
+		expect(errors.length).toBe(count)
 	}
 })
 
@@ -183,5 +189,16 @@ describe("Or Validator", () => {
 		_expect(0, OR(STRING(), NUMBER())).toBe(0)
 		_expect(0, OR(NULL(), UNDEFINED())).toBe(1)
 		_expect(0, OR(STRING("hi", "bye"), NUMBER(1, 2))).toBe(1)
+	})
+})
+
+describe("Class Validator", () => {
+	const X = class {}
+	const Y = class {}
+	test("basic class", () => {
+		_expect(new X(), CLASS(X)).toBe(0)
+		_expect(new X(), CLASS(Y)).toBe(1)
+		_expect("hi", CLASS(String)).toBe(1)
+		_expect(new String(""), CLASS(String)).toBe(0)
 	})
 })

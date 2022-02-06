@@ -1,11 +1,8 @@
-# validate-any
+# Validate Any
 
 ![License](https://img.shields.io/github/license/zS1L3NT/ts-npm-validate-any?style=for-the-badge) ![Languages](https://img.shields.io/github/languages/count/zS1L3NT/ts-npm-validate-any?style=for-the-badge) ![Top Language](https://img.shields.io/github/languages/top/zS1L3NT/ts-npm-validate-any?style=for-the-badge) ![Commit Activity](https://img.shields.io/github/commit-activity/y/zS1L3NT/ts-npm-validate-any?style=for-the-badge) ![Last commit](https://img.shields.io/github/last-commit/zS1L3NT/ts-npm-validate-any?style=for-the-badge)
 
-Validate Any is a type validator mainly for Typescript (also works with Javascript). Ever faced those issues where
-you're trying to make sure a type `any` is an instance of an interface? This is the issue this package was designed to
-solve. With this package, you can safely assert the type for an object and return customised errors if the types are
-incorrect
+Validate Any is a type validator mainly for Typescript (also works with Javascript) available [here](https://npmjs.org/package/validate-any). Ever faced those issues where you're trying to make sure a type `any` is an instance of an interface? This is the issue this package was designed to solve. With this package, you can safely assert the type for an object and return customised errors if the types are incorrect.
 
 ## Motivation
 

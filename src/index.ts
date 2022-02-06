@@ -1,4 +1,5 @@
 import BOOLEAN from "./functions/BOOLEAN"
+import CLASS from "./functions/CLASS"
 import LIST from "./functions/LIST"
 import NULL from "./functions/NULL"
 import NUMBER from "./functions/NUMBER"
@@ -37,6 +38,7 @@ export {
 	NULL,
 	UNDEFINED,
 	OR,
+	CLASS,
 	iValidationError,
 	iValidationResult
 }

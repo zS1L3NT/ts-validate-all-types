@@ -1,6 +1,6 @@
 {
 	"name": "validate-any",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "Data Validator",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
