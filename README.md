@@ -462,16 +462,17 @@ import { OBJECT, STRING, withValidBody } from "validate-any"
 // Express
 app.post(
 	"/body",
-	withValidBody(OBJECT({ usnm: STRING(), pswd: STRING() }), (req, res) => {
-		const { usnm, pswd } = req.body
-		console.log(`Username: ${usnm}`, `Password: ${pswd}`)
-		res.end()
-	})
+	withValidBody(OBJECT({ usnm: STRING(), pswd: STRING() }))(
+		(req, res) => {
+			const { usnm, pswd } = req.body
+			console.log(`Username: ${usnm}`, `Password: ${pswd}`)
+			res.end()
+		}
+	)
 )
 
 // Next
-export default withValidBody(
-	OBJECT({ usnm: STRING(), pswd: STRING() }),
+export default withValidBody(OBJECT({ usnm: STRING(), pswd: STRING() }))(
 	(req, res) => {
 		const { usnm, pswd } = req.body
 		console.log(`Username: ${usnm}`, `Password: ${pswd}`)

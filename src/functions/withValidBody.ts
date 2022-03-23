@@ -7,8 +7,8 @@ import { validate } from ".."
  *
  * @param rule Rule to compare the object with
  */
-export default <T, Request extends { body: any }, Response>(
-		validator: Validator<T>,
+export default <T>(validator: Validator<T>) =>
+	<Request extends { body: any }, Response>(
 		handler: (
 			req: Omit<Request, "body"> & { body: T },
 			res: Response
