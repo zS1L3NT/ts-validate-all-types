@@ -9,6 +9,7 @@ import STRING from "./functions/STRING"
 import UNDEFINED from "./functions/UNDEFINED"
 import validate from "./functions/validate"
 import withValidBody from "./functions/withValidBody"
+import withValidQuery from "./functions/withValidQuery"
 
 type iValidationError = {
 	location: string
@@ -30,6 +31,7 @@ type iValidationResult<T> =
 export {
 	validate,
 	withValidBody,
+	withValidQuery,
 	STRING,
 	NUMBER,
 	BOOLEAN,
