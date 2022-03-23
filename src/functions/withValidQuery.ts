@@ -2,23 +2,23 @@ import Validator from "../classes/Validator"
 import { validate } from ".."
 
 /**
- * Use this function to verify the types for an api's request's body
+ * Use this function to verify the types for an api's request's query string
  * This way, you can catch errors before they affect your express callback
  *
  * @param rule Rule to compare the object with
  */
-export default <T, Request extends { body: any }, Response>(
+export default <T, Request extends { query: any }, Response>(
 		validator: Validator<T>,
 		handler: (
-			req: Omit<Request, "body"> & { body: T },
+			req: Omit<Request, "query"> & { query: T },
 			res: Response
 		) => void
 	) =>
 	(req: Request, res: any) => {
-		const { success, errors, data } = validate(req.body, validator)
+		const { success, errors, data } = validate(req.query, validator)
 
 		if (success) {
-			req.body = data!
+			req.query = data!
 			handler(req, res)
 		} else {
 			res.status(400).send({ errors })

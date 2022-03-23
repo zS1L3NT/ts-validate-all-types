@@ -491,6 +491,10 @@ Because of the middleware, in Typescript you can now safely use type assertions.
 Also, now for both Typescript and Javascript, you can safely use the variables like
 they are the defined types and not have to worry about invalid types crashing your server!
 
+### Using `withValidQuery` with Express or Next
+
+The `withValidQuery` works the same way as `withValidBody` but it validates the `req.query` instead.
+
 ## Testing
 
 Validate Any's individual validators are tested with Jest. To run the tests, run the command
