@@ -8,7 +8,7 @@ export default class UndefinedValidator<
 	public constructor() {
 		super()
 
-		this.schema = `"undefined"`
+		this.schema = `{"$type":"undefined"}`
 	}
 
 	public validate(data: any, locator: Locator): iValidationResult<T> {

@@ -14,18 +14,18 @@ export default class ObjectValidator<T> extends Validator<T> {
 		this.rule_object = rule_object
 		if (rule_object) {
 			if (Object.keys(rule_object).length === 0) {
-				this.schema = `{}`
+				this.schema = `{"$type":"object"}`
 			} else {
-				this.schema = `{`
+				this.schema = `{"$type":"object","$properties":{`
 				for (const rule_key in rule_object) {
 					const rule_value = rule_object[rule_key]
 					this.schema += `"${rule_key}":${rule_value!.schema},`
 				}
 				this.schema = this.schema.slice(0, -1)
-				this.schema += `}`
+				this.schema += `}}`
 			}
 		} else {
-			this.schema = `{"<string>": "<any>"}`
+			this.schema = `{"$type":"object","$properties":{"$any":{"$type":"any"}}}`
 		}
 	}
 

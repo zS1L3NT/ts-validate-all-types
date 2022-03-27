@@ -12,7 +12,7 @@ export default class ClassValidator<
 		super()
 
 		this.clazz = clazz
-		this.schema = `"<class::${clazz.name}>"`
+		this.schema = `{"$type":"class","$name":"${clazz.name}"}`
 	}
 
 	public validate(data: any, locator: Locator): iValidationResult<T> {

@@ -10,11 +10,10 @@ export default class ListValidator<T> extends Validator<T[]> {
 
 		this.validators = validators
 		if (validators.length === 0) {
-			this.schema = `"<any[]>"`
+			this.schema = `{"$type":"list"}`
 		} else {
-			this.schema = `["<list>",${validators
-				.map(validator => validator.schema)
-				.join(", ")}]`
+			const schemas = validators.map(validator => validator.schema)
+			this.schema = `{"$type":"list","$values":[${schemas.join(",")}]}`
 		}
 	}
 

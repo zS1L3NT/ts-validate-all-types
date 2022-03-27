@@ -14,9 +14,11 @@ export default class StringValidator<
 
 		this.rules = rules
 		if (rules.length === 0) {
-			this.schema = `"<string>"`
+			this.schema = `{"$type":"string"}`
 		} else {
-			this.schema = `"${rules.map(rule => `'${rule}'`).join(" | ")}"`
+			this.schema = `{"$type":"string","$values":[${rules
+				.map(rule => `"${rule}"`)
+				.join(",")}]}`
 		}
 	}
 
