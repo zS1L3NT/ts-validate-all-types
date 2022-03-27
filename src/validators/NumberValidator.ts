@@ -11,9 +11,9 @@ export default class NumberValidator<T extends number> extends Validator<T> {
 
 		this.numbers = numbers
 		if (numbers.length === 0) {
-			this.schema = `number`
+			this.schema = `"<number>"`
 		} else {
-			this.schema = numbers.join(" | ")
+			this.schema = `"(${numbers.join(" | ")})"`
 		}
 	}
 

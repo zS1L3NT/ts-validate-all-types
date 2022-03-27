@@ -10,9 +10,9 @@ export default class BooleanValidator<T extends boolean> extends Validator<T> {
 
 		this.boolean = boolean
 		if (boolean !== undefined) {
-			this.schema = `${boolean}`
+			this.schema = `"(${boolean})"`
 		} else {
-			this.schema = `boolean`
+			this.schema = `"<boolean>"`
 		}
 	}
 

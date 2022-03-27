@@ -14,13 +14,9 @@ export default class StringValidator<
 
 		this.rules = rules
 		if (rules.length === 0) {
-			this.schema = `string`
+			this.schema = `"<string>"`
 		} else {
-			this.schema = rules
-				.map(rule =>
-					rule instanceof RegExp ? rule : `"${rule}"` || `""`
-				)
-				.join(" | ")
+			this.schema = `"${rules.map(rule => `'${rule}'`).join(" | ")}"`
 		}
 	}
 

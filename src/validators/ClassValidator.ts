@@ -1,6 +1,6 @@
-import { iValidationResult } from ".."
 import Locator from "../classes/Locator"
 import Validator from "../classes/Validator"
+import { iValidationResult } from ".."
 
 export default class ClassValidator<
 	T extends new () => any
@@ -12,7 +12,7 @@ export default class ClassValidator<
 		super()
 
 		this.clazz = clazz
-		this.schema = clazz.name
+		this.schema = `"<class::${clazz.name}>"`
 	}
 
 	public validate(data: any, locator: Locator): iValidationResult<T> {

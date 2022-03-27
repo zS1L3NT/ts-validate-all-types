@@ -10,6 +10,15 @@ export default abstract class Validator<T> {
 	public abstract validate(data: any, locator: Locator): iValidationResult<T>
 
 	/**
+	 * Schema of the validator as a JSON object
+	 *
+	 * @returns JSON Schema of the object
+	 */
+	public getSchema(): any {
+		return JSON.parse(this.schema)
+	}
+
+	/**
 	 * A rough gauge of what the schema looks like
 	 * Formatting is similar to that of a TypeScript interface
 	 *

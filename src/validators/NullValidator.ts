@@ -6,7 +6,7 @@ export default class NullValidator<T extends null> extends Validator<T> {
 	public constructor() {
 		super()
 
-		this.schema = `null`
+		this.schema = `"<null>"`
 	}
 
 	public validate(data: any, locator: Locator): iValidationResult<T> {

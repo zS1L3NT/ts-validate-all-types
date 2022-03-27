@@ -10,7 +10,10 @@ export default class OrValidator<T> extends Validator<T> {
 		super()
 
 		this.validators = validators
-		this.schema = validators.map(validator => validator.schema).join(" | ")
+		this.schema = `"${validators
+			.map(validator => validator.schema)
+			.map(s => (s.startsWith('"') ? s.slice(1, -1) : s))
+			.join(" | ")}"`
 	}
 
 	public validate(data: any, locator: Locator): iValidationResult<T> {
