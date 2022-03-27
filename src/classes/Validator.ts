@@ -48,7 +48,7 @@ export default abstract class Validator<T> {
 				{
 					location: locator.getLocation(),
 					message,
-					expected: validator.formatSchema(),
+					expected: validator.getSchema(),
 					value: data
 				}
 			],
