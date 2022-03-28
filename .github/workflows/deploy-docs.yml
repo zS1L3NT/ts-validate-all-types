@@ -25,6 +25,6 @@ jobs:
             - name: Deploying with gh-pages
               run: |
                   git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-                  pnpx gh-pages -d docs/.vuepress/dist -u "github-actions-bot <support+actions@github.com>"
+                  pnpx -y gh-pages -d docs/.vuepress/dist -u "github-actions-bot <support+actions@github.com>"
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
