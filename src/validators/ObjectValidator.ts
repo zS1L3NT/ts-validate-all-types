@@ -53,7 +53,7 @@ export default class ObjectValidator<T> extends Validator<T> {
 							traversedLocator,
 							ObjectValidator.MISSING_PROPERTY,
 							ruleValue,
-							data
+							undefined
 						).errors
 					],
 					data: undefined
@@ -74,7 +74,7 @@ export default class ObjectValidator<T> extends Validator<T> {
 							traversedLocator,
 							ObjectValidator.UNKNOWN_PROPERTY,
 							new UndefinedValidator(),
-							data
+							dataValue
 						).errors
 					],
 					data: undefined
@@ -91,7 +91,7 @@ export default class ObjectValidator<T> extends Validator<T> {
 							traversedLocator,
 							Validator.WRONG_TYPE,
 							rule,
-							data
+							dataValue
 						).errors
 					],
 					data: undefined
