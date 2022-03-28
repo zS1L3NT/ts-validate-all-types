@@ -4,6 +4,8 @@
 
 Validate Any is a type validator mainly for Typescript (also works with Javascript) available [here](https://npmjs.org/package/validate-any). Ever faced those issues where you're trying to make sure a type `any` is an instance of an interface? This is the issue this package was designed to solve. With this package, you can safely assert the type for an object and return customised errors if the types are incorrect.
 
+**Full Documentation is available [here](http://validate-any.zectan.com).**
+
 ## Motivation
 
 I hate it when I am unable to validate the request types of JSON objects in Express requests. I wanted to be able to reject a request before my request handlers used the request body. I also didn't like casting the type of the body in the request.
