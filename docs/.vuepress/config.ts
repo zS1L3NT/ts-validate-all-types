@@ -7,6 +7,9 @@ export default defineConfig({
 		repo: "zS1L3NT/ts-npm-validate-any",
 		searchPlaceholder: "Search",
 		smoothScroll: true,
+		//@ts-ignore
+		displayAllHeaders: true,
+		activeHeaderLinks: true,
 		nav: [
 			{ text: "Home", link: "/" },
 			{ text: "Guides", link: "/guides/getting-started.html" },
