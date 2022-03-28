@@ -7,6 +7,6 @@ features:
     details: TypeScript annotations are generated based on schemas you write.
   - title: Runtime Validation
     details: Does validation of data at runtime so your data types are correct before you use it.
-  - title: Works with Express/Next
-    details: Provides validation middlewares that you can use with your Express/Next server.
+  - title: Works with Express/NextJS
+    details: Provides validation middlewares that you can use with your Express/NextJS server.
 ---

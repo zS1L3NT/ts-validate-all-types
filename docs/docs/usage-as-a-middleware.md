@@ -1,6 +1,6 @@
 # Usage as a Middleware
 
-You can use validate-any with Express or NextJS as a middleware.<br />
+You can use validate-any with Express/NextJS as a middleware.<br />
 This way, you can verify types of the requests before invalid types ruin your server.<br />
 
 ## How invalid requests are handled
@@ -48,7 +48,7 @@ app.post(
 	})
 )
 
-// Next
+// NextJS
 export default withValidBody(OBJECT({ usnm: STRING(), pswd: STRING() }))(
 	(req, res) => {
 		const { usnm, pswd } = req.body
@@ -80,7 +80,7 @@ app.get(
 	})
 )
 
-// Next
+// NextJS
 export default withValidQuery(OBJECT({ query: STRING() }))((req, res) => {
 	const { query } = req.query
 	console.log(`Query: ${query}`)
