@@ -12,17 +12,17 @@ export default defineConfig({
 		activeHeaderLinks: true,
 		nav: [
 			{ text: "Home", link: "/" },
-			{ text: "Guides", link: "/guides/getting-started.html" },
-			{ text: "References", link: "/references/" }
+			{ text: "Docs", link: "/docs/getting-started.html" }
 		],
 		sidebar: [
 			{
-				title: "Guide",
+				title: "Documentation",
+				collapsable: false,
 				children: [
-					["/guides/getting-started", "Getting Started"],
-					["/guides/validation-basics", "Validation Basics"],
-					["/guides/making-a-schema", "Making a Schema"],
-					["/guides/usage-as-a-middleware", "Usage as a middleware"]
+					["/docs/getting-started", "Getting Started"],
+					["/docs/validation-basics", "Validation Basics"],
+					["/docs/making-a-schema", "Making a Schema"],
+					["/docs/usage-as-a-middleware", "Usage as a middleware"]
 				]
 			}
 		]
