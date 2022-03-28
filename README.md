@@ -43,5 +43,4 @@ $ npm run test
     -   [![@babel/preset-typescript](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-npm-validate-any/dev/@babel/preset-typescript?style=flat-square)](https://npmjs.com/package/@babel/preset-typescript)
     -   [![jest](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-npm-validate-any/dev/jest?style=flat-square)](https://npmjs.com/package/jest)
 -   Miscellaneous
-    -   [![js-beautify](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-npm-validate-any/js-beautify?style=flat-square)](https://npmjs.com/package/js-beautify)
     -   [![vuepress](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-npm-validate-any/dev/vuepress?style=flat-square)](https://npmjs.com/package/vuepress)

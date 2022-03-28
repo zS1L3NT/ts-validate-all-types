@@ -1,6 +1,5 @@
 import Locator from "./Locator"
 import { iValidationResult } from ".."
-import { js as beautify } from "js-beautify"
 
 export default abstract class Validator<T> {
 	public static readonly WRONG_TYPE = `Value is not of the correct type`
@@ -16,16 +15,6 @@ export default abstract class Validator<T> {
 	 */
 	public getSchema(): any {
 		return JSON.parse(this.schema)
-	}
-
-	/**
-	 * A rough gauge of what the schema looks like
-	 * Formatting is similar to that of a TypeScript interface
-	 *
-	 * @return string String of the formatted schema
-	 */
-	public formatSchema(): string {
-		return beautify(this.schema, { indent_size: 4 })
 	}
 
 	protected success(data: T): iValidationResult<T> {
