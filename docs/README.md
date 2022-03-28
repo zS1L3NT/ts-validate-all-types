@@ -1,7 +1,7 @@
 ---
 home: true
 actionText: Get Started
-actionLink: /guides/Introduction.html
+actionLink: /guides/getting-started.html
 features:
   - title: TypeScript Annotations
     details: TypeScript annotations are generated based on schemas you write.

@@ -1,3 +1,0 @@
-# Introduction
-
-## How it works

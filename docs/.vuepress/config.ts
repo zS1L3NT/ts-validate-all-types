@@ -9,13 +9,18 @@ export default defineConfig({
 		smoothScroll: true,
 		nav: [
 			{ text: "Home", link: "/" },
-			{ text: "Guides", link: "/guides/Introduction.html" },
+			{ text: "Guides", link: "/guides/getting-started.html" },
 			{ text: "References", link: "/references/" }
 		],
 		sidebar: [
 			{
 				title: "Guide",
-				children: ["/guides/Introduction"]
+				children: [
+					["/guides/getting-started", "Getting Started"],
+					["/guides/validation-basics", "Validation Basics"],
+					["/guides/making-a-schema", "Making a Schema"],
+					["/guides/usage-as-a-middleware", "Usage as a middleware"]
+				]
 			}
 		]
 	}
