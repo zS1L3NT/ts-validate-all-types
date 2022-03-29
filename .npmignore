@@ -4,6 +4,7 @@
 .gitignore
 .editorconfig
 .prettierrc
+.npmrc
 nodemon.json
 tsconfig.json
 babel.config.js
