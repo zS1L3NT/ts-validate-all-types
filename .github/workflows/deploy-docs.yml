@@ -9,7 +9,6 @@ on:
 jobs:
     deploy-docs:
         runs-on: ubuntu-latest
-        environment: production
         steps:
             - name: Performing Repository Checkout
               uses: actions/checkout@v2
