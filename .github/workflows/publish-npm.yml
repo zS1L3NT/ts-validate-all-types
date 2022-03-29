@@ -30,7 +30,6 @@ jobs:
 
             - name: Publishing to NPM
               run: |
-                  git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
                   pnpm publish
               env:
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
