@@ -3,6 +3,9 @@ on:
     release:
         types:
             - published
+    push:
+        paths:
+            - .github/workflows/publish-npm.yml
 jobs:
     publish-npm:
         runs-on: ubuntu-latest
@@ -21,4 +24,8 @@ jobs:
               run: pnpx tsc
 
             - name: Publishing to NPM
-              run: pnpm publish
+              run: |
+                  git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+                  pnpm publish
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
