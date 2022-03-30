@@ -4,4 +4,6 @@
 **/config.json
 **/*.test.ts
 **/.vscode
+**/.temp
+**/.cache
 .npmrc
