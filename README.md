@@ -2,9 +2,9 @@
 
 ![License](https://img.shields.io/github/license/zS1L3NT/ts-npm-validate-any?style=for-the-badge) ![Languages](https://img.shields.io/github/languages/count/zS1L3NT/ts-npm-validate-any?style=for-the-badge) ![Top Language](https://img.shields.io/github/languages/top/zS1L3NT/ts-npm-validate-any?style=for-the-badge) ![Commit Activity](https://img.shields.io/github/commit-activity/y/zS1L3NT/ts-npm-validate-any?style=for-the-badge) ![Last commit](https://img.shields.io/github/last-commit/zS1L3NT/ts-npm-validate-any?style=for-the-badge)
 
-Validate Any is a type validator mainly for Typescript (also works with Javascript) available [here](https://npmjs.org/package/validate-any). Ever faced those issues where you're trying to make sure a type `any` is an instance of an interface? This is the issue this package was designed to solve. With this package, you can safely assert the type for an object and return customised errors if the types are incorrect.
+Validate Any is a type validator mainly for Typescript (also works with Javascript). Ever faced those issues where you're trying to make sure a type `any` is an instance of an interface? This is the issue this package was designed to solve. With this package, you can safely assert the type for an object and return customised errors if the types are incorrect.
 
-**Full Documentation is available [here](http://validate-any.zectan.com).**
+This package has been deprecated and deleted because there are much much better alternatives on the Npm registry like [Zod](https://zod.dev). I would recommend using that instead.
 
 ## Motivation
 
@@ -37,12 +37,13 @@ $ npm run test
 ## Built with
 
 -   TypeScript
-    -   [![@types/jest](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-npm-validate-any/dev/@types/jest?style=flat-square)](https://npmjs.com/package/@types/jest)
-    -   [![typescript](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-npm-validate-any/dev/typescript?style=flat-square)](https://npmjs.com/package/typescript)
--   Jest
-    -   [![@babel/core](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-npm-validate-any/dev/@babel/core?style=flat-square)](https://npmjs.com/package/@babel/core)
-    -   [![@babel/preset-env](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-npm-validate-any/dev/@babel/preset-env?style=flat-square)](https://npmjs.com/package/@babel/preset-env)
-    -   [![@babel/preset-typescript](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-npm-validate-any/dev/@babel/preset-typescript?style=flat-square)](https://npmjs.com/package/@babel/preset-typescript)
-    -   [![jest](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-npm-validate-any/dev/jest?style=flat-square)](https://npmjs.com/package/jest)
--   Miscellaneous
-    -   [![vuepress](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-npm-validate-any/dev/vuepress?style=flat-square)](https://npmjs.com/package/vuepress)
+    -   TypeScript
+        -   [![@types/jest](https://img.shields.io/badge/%40types%2Fjest-%5E27.4.0-red?style=flat-square)](https://npmjs.com/package/@types/jest/v/27.4.0)
+        -   [![typescript](https://img.shields.io/badge/typescript-%5E4.5.5-red?style=flat-square)](https://npmjs.com/package/typescript/v/4.5.5)
+    -   Jest
+        -   [![@babel/core](https://img.shields.io/badge/%40babel%2Fcore-%5E7.17.0-red?style=flat-square)](https://npmjs.com/package/@babel/core/v/7.17.0)
+        -   [![@babel/preset-env](https://img.shields.io/badge/%40babel%2Fpreset--env-%5E7.16.11-red?style=flat-square)](https://npmjs.com/package/@babel/preset-env/v/7.16.11)
+        -   [![@babel/preset-typescript](https://img.shields.io/badge/%40babel%2Fpreset--typescript-%5E7.16.7-red?style=flat-square)](https://npmjs.com/package/@babel/preset-typescript/v/7.16.7)
+        -   [![jest](https://img.shields.io/badge/jest-%5E27.5.0-red?style=flat-square)](https://npmjs.com/package/jest/v/27.5.0)
+    -   Miscellaneous
+        -   [![vuepress](https://img.shields.io/badge/vuepress-%5E1.9.7-red?style=flat-square)](https://npmjs.com/package/vuepress/v/1.9.7)
